@@ -65,7 +65,7 @@ export const useCharges = () => {
 		};
 
 		updateTimer();
-		interval = setInterval(updateTimer, 1000);
+		interval = setInterval(updateTimer, 500);
 	};
 
 	const decrementCharge = () => {
