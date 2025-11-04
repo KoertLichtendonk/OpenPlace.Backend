@@ -19,7 +19,7 @@ export const useCharges = () => {
 		if (serverCharges.value === null) {
 			return null;
 		}
-		return serverCharges.value - uncommittedPixels.value;
+		return Math.floor(serverCharges.value) - uncommittedPixels.value;
 	});
 
 	const initialize = (chargeCount: number, maxChargesCount: number, cooldownMsCount: number) => {
