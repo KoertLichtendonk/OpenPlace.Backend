@@ -1,7 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { createCanvas, loadImage } from "@napi-rs/canvas";
-import imagemin from "imagemin";
-import pngquant from "imagemin-pngquant";
+import sharp from "sharp";
 import { checkColorUnlocked, COLOR_PALETTE } from "../utils/colors.js";
 import { calculateChargeRecharge } from "../utils/charges.js";
 import { Region, RegionService } from "./region.js";
@@ -376,16 +375,15 @@ export class PixelService {
 	}
 
 	private async quantize(buffer: Buffer): Promise<Buffer> {
-		return Buffer.from(await imagemin.buffer(buffer, {
-			plugins: [
-				pngquant({
-					posterize: 0,
-					quality: [1, 1],
-					speed: 9,
-					strip: true
-				})
-			]
-		}));
+		return await sharp(buffer)
+			.png({
+				adaptiveFiltering: false,
+				palette: true,
+				compressionLevel: 8,
+				// More effort seems to have no effect on file size, but does impact speed
+				effort: 1
+			})
+			.toBuffer();
 	}
 
 	async paintPixels(account: { userId: number; ip: string; country?: string; }, input: PaintPixelsInput, season = 0): Promise<PaintPixelsResult> {
@@ -652,7 +650,7 @@ export class PixelService {
 			}
 		}
 
-        // await this.updatePixelTile(tileX, tileY, season);
+		// await this.updatePixelTile(tileX, tileY, season);
 		await this.drawPixelsToTile(validPixels, tileX, tileY, season);
 		if (painted > 0) {
 			let retries = 5;
