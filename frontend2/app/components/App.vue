@@ -196,7 +196,8 @@ const {
 	formattedTime,
 	decrementCharge,
 	incrementCharge,
-	initialize
+	initialize,
+	commitPixels
 } = useCharges();
 
 const isLoggedIn = computed(() => userProfile.value !== null);
@@ -478,8 +479,9 @@ const handleSubmitPixels = async () => {
 		}));
 		await submitPixels(paintPixels);
 
-		// Commit the painted pixels to our local canvas
+		// Commit the painted pixels to our local state
 		mapRef.value?.commitCanvases();
+		commitPixels();
 
 		// Reset state
 		pixels.value = [];

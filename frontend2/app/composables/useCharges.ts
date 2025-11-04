@@ -1,23 +1,35 @@
 import { computed, onUnmounted, ref } from "vue";
 
 export const useCharges = () => {
-	const currentCharges = ref<number | null>(null);
-	const max = ref<number | null>(null);
-	const cooldown = ref<number | null>(null);
-	let interval: number | null = null;
+	// Server state
+	const serverCharges = ref<number | null>(null);
+	const maxCharges = ref<number | null>(null);
+	const cooldownMs = ref<number | null>(null);
 
-	// Calculate time until next charge in seconds
+	// Local state
+	const uncommittedPixels = ref(0);
+
+	// Recharge timer
 	const timeUntilNextCharge = ref(0);
 	let lastRechargeTime = Date.now();
+	let interval: number | null = null;
 
-	const initialize = (chargeCount: number, maxCharges: number, cooldownMs: number) => {
-		currentCharges.value = Math.floor(chargeCount);
-		max.value = Math.floor(maxCharges);
-		cooldown.value = cooldownMs;
+	// Charges available
+	const currentCharges = computed(() => {
+		if (serverCharges.value === null) {
+			return null;
+		}
+		return serverCharges.value - uncommittedPixels.value;
+	});
+
+	const initialize = (chargeCount: number, maxChargesCount: number, cooldownMsCount: number) => {
+		serverCharges.value = chargeCount;
+		maxCharges.value = maxChargesCount;
+		cooldownMs.value = cooldownMsCount;
 
 		const fraction = chargeCount - Math.floor(chargeCount);
-		const initialTimeRemaining = cooldownMs * (1 - fraction);
-		lastRechargeTime = Date.now() - (cooldownMs - initialTimeRemaining);
+		const timeIntoCurrentRecharge = cooldownMsCount * (1 - fraction);
+		lastRechargeTime = Date.now() - (cooldownMsCount - timeIntoCurrentRecharge);
 
 		startChargeTimer();
 	};
@@ -27,49 +39,55 @@ export const useCharges = () => {
 			clearInterval(interval);
 		}
 
-		if (currentCharges.value === null || max.value === null || cooldown.value === null) {
+		if (serverCharges.value === null || maxCharges.value === null || cooldownMs.value === null) {
 			return;
 		}
 
-		if (currentCharges.value < max.value) {
-			timeUntilNextCharge.value = Math.ceil((cooldown.value - (Date.now() - lastRechargeTime)) / 1000);
-		}
-
-		interval = setInterval(() => {
-			if (currentCharges.value === null || max.value === null || cooldown.value === null) {
+		const updateTimer = () => {
+			if (serverCharges.value === null || maxCharges.value === null || cooldownMs.value === null) {
 				return;
 			}
 
-			if (currentCharges.value < max.value) {
+			if (serverCharges.value < maxCharges.value) {
 				const elapsed = Date.now() - lastRechargeTime;
-				const remaining = cooldown.value - elapsed;
+				const remaining = cooldownMs.value - elapsed;
 
 				if (remaining <= 0) {
-					currentCharges.value = Math.floor(Math.min(currentCharges.value + 1, max.value));
+					serverCharges.value = Math.min(serverCharges.value + 1, maxCharges.value);
 					lastRechargeTime = Date.now();
-
-					timeUntilNextCharge.value = currentCharges.value < max.value ? Math.ceil(cooldown.value / 1000) : 0;
+					timeUntilNextCharge.value = serverCharges.value < maxCharges.value ? Math.ceil(cooldownMs.value / 1000) : 0;
 				} else {
 					timeUntilNextCharge.value = Math.ceil(remaining / 1000);
 				}
 			} else {
 				timeUntilNextCharge.value = 0;
 			}
-		}, 1000);
+		};
+
+		updateTimer();
+		interval = setInterval(updateTimer, 1000);
 	};
 
 	const decrementCharge = () => {
-		if (currentCharges.value !== null && currentCharges.value > 0) {
-			currentCharges.value = Math.floor(currentCharges.value - 1);
-			if (max.value !== null && currentCharges.value === max.value - 1) {
-				startChargeTimer();
-			}
-		}
+		uncommittedPixels.value++;
 	};
 
 	const incrementCharge = () => {
-		if (currentCharges.value !== null && max.value !== null && currentCharges.value < max.value) {
-			currentCharges.value = Math.floor(currentCharges.value + 1);
+		if (uncommittedPixels.value > 0) {
+			uncommittedPixels.value--;
+		}
+	};
+
+	const commitPixels = () => {
+		// Match what the server state should be (ignoring bonuses)
+		if (serverCharges.value !== null) {
+			serverCharges.value = Math.max(0, serverCharges.value - uncommittedPixels.value);
+			uncommittedPixels.value = 0;
+
+			if (maxCharges.value !== null && serverCharges.value < maxCharges.value) {
+				lastRechargeTime = Date.now();
+				startChargeTimer();
+			}
 		}
 	};
 
@@ -87,12 +105,14 @@ export const useCharges = () => {
 
 	return {
 		currentCharges,
-		maxCharges: max,
-		cooldownMs: cooldown,
+		maxCharges,
+		cooldownMs,
 		timeUntilNextCharge,
 		formattedTime,
+		uncommittedPixels,
 		decrementCharge,
 		incrementCharge,
+		commitPixels,
 		initialize
 	};
 };
