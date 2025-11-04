@@ -4,6 +4,7 @@ export interface UserProfile {
 	discord: string;
 	country: number;
 	banned: boolean;
+	verified: boolean;
 	suspensionReason: string | null;
 	timeoutUntil: string;
 	charges: {

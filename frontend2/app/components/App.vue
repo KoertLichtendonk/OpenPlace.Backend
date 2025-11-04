@@ -8,7 +8,7 @@
 				:is-drawing="isPaintOpen"
 				:is-satellite="isSatellite"
 				:favorite-locations="userProfile?.favoriteLocations"
-				:selected-pixel-coords="isPixelInfoOpen ? selectedPixelCoords : null"
+				:selected-pixel-coords="selectedPixelCoords"
 				@map-click="handleMapClick"
 				@map-right-click="handleMapRightClick"
 				@draw-pixels="handleDrawPixels"
@@ -128,7 +128,7 @@
 					:max-charges="maxCharges ?? 0"
 					:pixel-count="pixels.length"
 					:time-until-next="formattedTime"
-					:extra-colors-bitmap="userProfile?.extraColorsBitmap ?? null"
+					:extra-colors-bitmap="userProfile?.extraColorsBitmap ?? 0"
 					@color-select="handleColorSelect"
 					@close="handleClosePaint"
 					@toggle-eraser="isEraserMode = !isEraserMode"
@@ -138,9 +138,9 @@
 		</div>
 
 		<PixelInfo
-			:is-open="isPixelInfoOpen"
+			:is-open="selectedPixelCoords !== null"
 			:coords="selectedPixelCoords!"
-			@close="isPixelInfoOpen = false"
+			@close="selectedPixelCoords = null"
 			@report="handleReportPixel"
 			@favorite-added="handleFavoriteChanged"
 			@favorite-removed="handleFavoriteChanged"
@@ -410,7 +410,7 @@ const handleMapClick = (event: LngLat) => {
 
 		if (now - lastClickTime < DOUBLE_CLICK_THRESHOLD && isPixelInfoOpen.value) {
 			// Double-click to zoom - dismiss pixel info
-			isPixelInfoOpen.value = false;
+			selectedPixelCoords.value = null;
 			return;
 		}
 
@@ -426,7 +426,6 @@ const handleMapClick = (event: LngLat) => {
 		// Show pixel info
 		const tileCoords = lngLatToTileCoords(event);
 		selectedPixelCoords.value = tileCoords;
-		isPixelInfoOpen.value = true;
 
 		if (mapRef.value) {
 			const currentZoom = mapRef.value.getZoom();
@@ -521,7 +520,6 @@ const handleFavoriteClick = (favorite: { id: number; name: string; latitude: num
 	// Open pixel info
 	const tileCoords = lngLatToTileCoords([favorite.longitude, favorite.latitude]);
 	selectedPixelCoords.value = tileCoords;
-	isPixelInfoOpen.value = true;
 
 	// TODO: Make shared function for this
 	const url = new URL(globalThis.location.href);
