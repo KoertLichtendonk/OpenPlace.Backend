@@ -36,7 +36,7 @@
 							>{{ countryFlag }}</span>
 						</div>
 						<div class="user-stat">
-							<span>Pixels painted: {{ user.pixelsPainted }}</span>
+							<span>Pixels painted: {{ user.pixelsPainted.toLocaleString() }}</span>
 						</div>
 						<div class="user-stat">
 							<span>Level {{ user.level }} ({{ user.levelProgress }}%)</span>
