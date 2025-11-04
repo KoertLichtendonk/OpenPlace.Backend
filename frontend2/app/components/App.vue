@@ -1,6 +1,7 @@
 <template>
 	<div class="app-container">
 		<Toast />
+
 		<ClientOnly>
 			<Map
 				ref="mapRef"
@@ -150,7 +151,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
-import Toast from "primevue/toast";
+import Toast, { type ToastMessageOptions } from "primevue/toast";
 import { useToast } from "primevue/usetoast";
 import Map from "~/components/Map.vue";
 import PaintButton from "~/components/PaintButton.vue";
@@ -189,6 +190,12 @@ const randomTargetCoords = ref<{ lat: number; lng: number; zoom: number } | null
 let lastUserProfileFetch = Date.now();
 
 const toast = useToast();
+
+const notEnoughChargesToast: ToastMessageOptions = {
+	severity: "warn",
+	summary: "Not enough charges",
+	life: 3000
+};
 
 const {
 	currentCharges,
@@ -366,7 +373,13 @@ const drawPixelAtCoords = (tileCoords: TileCoords) => {
 		erasePixelAtCoords(tileCoords);
 	} else {
 		// Paint mode
-		if (!currentCharges.value || currentCharges.value <= 0) {
+		if (currentCharges.value === null) {
+			return;
+		}
+
+		if (currentCharges.value <= 0) {
+			toast.remove(notEnoughChargesToast);
+			toast.add(notEnoughChargesToast);
 			return;
 		}
 

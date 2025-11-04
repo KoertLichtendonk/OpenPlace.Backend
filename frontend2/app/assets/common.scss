@@ -3,6 +3,11 @@
 	--p-content-background: #fffe;
 	--p-card-background: var(--p-content-background);
 	--p-menu-background: var(--p-content-background);
+	--p-toast-blur: 10px;
+	--p-toast-error-background: var(--p-content-background);
+	--p-toast-warn-background: var(--p-content-background);
+	--p-toast-success-background: var(--p-content-background);
+	--p-toast-info-background: var(--p-content-background);
 }
 
 @media (prefers-color-scheme: dark) {
