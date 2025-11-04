@@ -170,6 +170,8 @@ interface Pixel {
 	color: string;
 }
 
+const USER_RELOAD_INTERVAL = 15_000;
+
 const isPaintOpen = ref(false);
 const isSatellite = ref(false);
 const isUserMenuOpen = ref(false);
@@ -252,7 +254,7 @@ const handlePopState = () => {
 
 const handleWindowFocus = async () => {
 	const now = Date.now();
-	if (now - lastUserProfileFetch < 30_000) {
+	if (now - lastUserProfileFetch < USER_RELOAD_INTERVAL) {
 		return;
 	}
 
@@ -501,6 +503,22 @@ const handleSubmitPixels = async () => {
 	} catch (error: unknown) {
 		console.error("Failed to submit pixels:", error);
 		const message = error instanceof Error ? error.message : String(error);
+	}
+
+	// Get new charges from server
+	try {
+		lastUserProfileFetch = Date.now();
+		const profile = await fetchUserProfile();
+		userProfile.value = profile;
+		if (profile) {
+			initialize(
+				profile.charges.count,
+				profile.charges.max,
+				profile.charges.cooldownMs
+			);
+		}
+	} catch (error) {
+		console.error("Failed to refresh user profile after painting:", error);
 	}
 };
 
