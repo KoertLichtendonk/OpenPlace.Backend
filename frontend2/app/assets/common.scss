@@ -1,13 +1,13 @@
 :root {
 	--p-backdrop-filter: blur(10px);
-	--p-background: #fffe;
-	--p-card-background: var(--p-background);
-	--p-menu-background: var(--p-background);
+	--p-content-background: #fffe;
+	--p-card-background: var(--p-content-background);
+	--p-menu-background: var(--p-content-background);
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--p-background: #18181bee;
+		--p-content-background: #18181bee;
 	}
 }
 
