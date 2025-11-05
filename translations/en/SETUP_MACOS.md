@@ -1,6 +1,6 @@
 # openplace — MacOS Setup Guide
 
-This guide will help you prepare a **macOS** machine to run **OpenPlace**.
+This guide will help you prepare a **macOS** machine to run **openplace**.
 
 ---
 
@@ -82,7 +82,7 @@ caddy run --config Caddyfile
 ---
 
 ## Notes on SSL
-OpenPlace **requires HTTPS**.  
+openplace **requires HTTPS**.  
 If you are testing locally, you can access the app at:
 ```
 https://{IP}:8080

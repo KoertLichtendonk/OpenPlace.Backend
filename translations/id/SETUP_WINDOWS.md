@@ -1,4 +1,4 @@
-# OpenPlace — Panduan Pengaturan Windows
+# openplace — Panduan Pengaturan Windows
 
 Panduan ini akan membantu Anda menyiapkan **Windows** untuk menjalankan **openplace**.
 
@@ -121,7 +121,7 @@ https://{your-local-IP}:8080
 ```
 
 > [PERINGATAN ⚠️]
-> ⚠️ **Penting:** OpenPlace hanya berfungsi melalui HTTPS. Jika Anda mencoba menggunakan HTTP, Anda akan mendapatkan **400 Bad Request**.
+> ⚠️ **Penting:** openplace hanya berfungsi melalui HTTPS. Jika Anda mencoba menggunakan HTTP, Anda akan mendapatkan **400 Bad Request**.
 
 
 ---

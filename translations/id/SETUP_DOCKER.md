@@ -51,7 +51,7 @@ Ini akan memulai:
 
 ## 4. Akses aplikasinya
 
-Setelah semua servis berjalan, kamu bisa akses OpenPlace di:
+Setelah semua servis berjalan, kamu bisa akses openplace di:
 
 ```
 http://localhost

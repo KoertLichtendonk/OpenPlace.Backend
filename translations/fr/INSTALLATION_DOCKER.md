@@ -52,7 +52,7 @@ Cela démarrera :
 
 ## 4. Accéder à l’application
 
-Une fois tous les services en cours d’exécution, vous pouvez accéder à OpenPlace à l’adresse :
+Une fois tous les services en cours d’exécution, vous pouvez accéder à openplace à l’adresse :
 
 ```
 http://localhost

@@ -121,7 +121,7 @@ https://{your-local-IP}:8080
 ```
 
 > [WARNING ⚠️]
-> ⚠️ **Important:** OpenPlace only works over HTTPS. If you try HTTP, you’ll get **400 Bad Request**.
+> ⚠️ **Important:** openplace only works over HTTPS. If you try HTTP, you’ll get **400 Bad Request**.
 
 
 ---

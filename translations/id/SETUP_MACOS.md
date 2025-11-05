@@ -1,6 +1,6 @@
 # openplace — Panduan Pengaturan MacOS
 
-Panduan ini akan membantu Anda menyiapkan **macOS** untuk menjalankan **OpenPlace**.
+Panduan ini akan membantu Anda menyiapkan **macOS** untuk menjalankan **openplace**.
 
 ---
 
@@ -82,7 +82,7 @@ caddy run --config Caddyfile
 ---
 
 ## Catatan untuk SSL
-OpenPlace **membutuhkan HTTPS**.  
+openplace **membutuhkan HTTPS**.  
 Jika Anda melakukan pengujian secara lokal, Anda dapat mengakses aplikasinya di:
 ```
 https://{IP}:8080
