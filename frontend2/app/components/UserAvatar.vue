@@ -3,7 +3,11 @@
 		class="avatar-button"
 		@click="$emit('click', $event)"
 	>
-		<div style="position: relative;">
+		<OverlayBadge
+			:value="user.level"
+			size="small"
+			class="avatar-button-badge"
+		>
 			<Avatar
 				:label="user.username.charAt(0).toUpperCase()"
 				:image="user.avatar || undefined"
@@ -11,18 +15,13 @@
 				shape="circle"
 				class="avatar-button-avatar"
 			/>
-			<Badge
-				:value="user.level"
-				severity="secondary"
-				class="avatar-button-badge"
-			/>
-		</div>
+			</OverlayBadge>
 	</button>
 </template>
 
 <script setup lang="ts">
 import Avatar from "primevue/avatar";
-import Badge from "primevue/badge";
+import OverlayBadge from "primevue/overlaybadge";
 
 defineProps<{
 	user: {
@@ -47,15 +46,15 @@ defineEmits<{
 }
 
 .avatar-button-avatar {
-	background-color: #4ade80;
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.avatar-button-badge {
-	position: absolute;
-	bottom: -5px;
-	right: -5px;
-	background-color: #a855f7;
-	color: white;
+.p-overlaybadge .p-badge {
+	inset-block-start: auto;
+	inset-block-end: 0;
+	transform: translate(25%, 25%);
+	transform-origin: 0 0;
+	outline-width: 0;
+	border-radius: 999px;
 }
 </style>

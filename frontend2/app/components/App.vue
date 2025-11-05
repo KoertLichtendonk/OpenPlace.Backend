@@ -27,6 +27,7 @@
 					severity="secondary"
 					raised
 					rounded
+					class="app-overlays--button"
 					aria-label="Zoom in"
 					@click="zoomIn"
 				>
@@ -37,6 +38,7 @@
 					severity="secondary"
 					raised
 					rounded
+					class="app-overlays--button"
 					aria-label="Zoom out"
 					@click="zoomOut"
 				>
@@ -48,6 +50,7 @@
 					severity="secondary"
 					raised
 					rounded
+					class="app-overlays--button"
 					aria-label="Reset map rotation"
 					@click="resetMapRotation"
 				>
@@ -86,6 +89,7 @@
 					severity="secondary"
 					raised
 					rounded
+					class="app-overlays--button"
 					aria-label="Toggle satellite"
 					@click="toggleSatellite"
 				>
@@ -96,6 +100,7 @@
 					severity="secondary"
 					raised
 					rounded
+					class="app-overlays--button"
 					aria-label="Go to random pixel"
 					:loading="isLoadingRandom"
 					@click="goToRandom"
@@ -688,5 +693,10 @@ const goToRandom = async () => {
 	justify-self: stretch;
 	position: relative;
 	z-index: 12;
+}
+
+.app-overlays--button {
+	font-size: 1.1rem;
+	aspect-ratio: 1;
 }
 </style>

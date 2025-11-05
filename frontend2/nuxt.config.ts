@@ -1,5 +1,40 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { definePreset } from "@primeuix/themes";
 import Aura from "@primeuix/themes/aura";
+
+const theme = definePreset(Aura, {
+	primitive: {
+		blue: {
+			50: "#f6f8fe",
+			100: "#d1dbf8",
+			200: "#adbff2",
+			300: "#89a2ec",
+			400: "#6586e7",
+			500: "#4169e1",
+			600: "#3759bf",
+			700: "#2e4a9e",
+			800: "#243a7c",
+			900: "#1a2a5a",
+			950: "#101a38"
+		}
+	},
+
+	semantic: {
+		primary: {
+			50: "{blue:50}",
+			100: "{blue:100}",
+			200: "{blue:200}",
+			300: "{blue:300}",
+			400: "{blue:400}",
+			500: "{blue:500}",
+			600: "{blue:600}",
+			700: "{blue:700}",
+			800: "{blue:800}",
+			900: "{blue:900}",
+			950: "{blue:950}"
+		}
+	}
+});
 
 export default defineNuxtConfig({
 	compatibilityDate: "2025-07-15",
@@ -100,15 +135,13 @@ export default defineNuxtConfig({
 	primevue: {
 		options: {
 			theme: {
-				preset: Aura
+				preset: theme
 			}
 		}
 	},
 
 	css: [
 		"bootstrap/dist/css/bootstrap-reboot.min.css",
-		"bootstrap/dist/css/bootstrap-utilities.min.css",
-		"bootstrap/dist/css/bootstrap-grid.min.css",
 		"maplibre-gl/dist/maplibre-gl.css",
 		"~/assets/common.scss"
 	]

@@ -7,7 +7,7 @@
 		:class="['paint-button', { 'paint-button-shimmer': hasPendingPixels }]"
 		@click="$emit('click')"
 	>
-		<Icon name="paint" />
+		<Icon name="paint" class="paint-button-icon" />
 		<span :class="{ 'shimmer-text': hasPendingPixels }">
 			Paint {{ charges.toLocaleString() }}/{{ maxCharges.toLocaleString() }}
 		</span>
@@ -38,6 +38,10 @@ defineEmits<{
 .paint-button {
 	font-weight: 600;
 	font-feature-settings: "tnum";
+}
+
+.paint-button-icon {
+	font-size: 1.5rem;
 }
 
 .paint-button-time {
