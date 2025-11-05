@@ -194,7 +194,6 @@ import ColorPalette from "~/components/ColorPalette.vue";
 import UserAvatar from "~/components/UserAvatar.vue";
 import UserMenu from "~/components/UserMenu.vue";
 import PixelInfo from "~/components/PixelInfo.vue";
-import NotificationDialog from "~/components/NotificationDialog.vue";
 import { CLOSE_ZOOM_LEVEL, getPixelId, type LngLat, lngLatToTileCoords, type TileCoords, tileCoordsToLngLat, ZOOM_LEVEL } from "~/utils/coordinates";
 import { type UserProfile, useUserProfile } from "~/composables/useUserProfile";
 import { useCharges } from "~/composables/useCharges";
