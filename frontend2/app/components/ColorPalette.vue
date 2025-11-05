@@ -3,15 +3,16 @@
 		v-if="isOpen"
 		class="palette-container"
 	>
-		<Card class="palette-card">
+		<Card class="palette-card" aria-labelledby="palette-label">
 			<template #header>
 				<div class="palette-header">
-					<div>
-						<Icon name="paint" />
+					<Icon name="paint" class="palette-header-icon" />
+
+					<div id="palette-label" class="palette-header-label">
 						Paint {{ pixelCount.toLocaleString() }} {{ pixelCount === 1 ? "pixel" : "pixels" }}
 					</div>
 
-					<div>
+					<div class="palette-buttons">
 						<Button
 							v-tooltip.top="isEraserMode ? 'Switch to painting' : 'Switch to eraser'"
 							:severity="isEraserMode ? 'danger' : 'secondary'"
@@ -25,8 +26,8 @@
 						</Button>
 
 						<Button
-							v-tooltip.top="pixelCount == 0 ? 'Close' : 'Discard changes'"
-							severity="secondary"
+							v-tooltip.top="pixelCount === 0 ? 'Close' : 'Discard changes'"
+							:severity="pixelCount === 0 ? 'secondary' : 'danger'"
 							size="small"
 							rounded
 							text
@@ -109,15 +110,36 @@ defineEmits<{
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 0.75rem;
+	padding: 0.75rem var(--p-card-body-padding) 0 var(--p-card-body-padding);
+	gap: 0.25rem;
 	border-bottom: 1px solid var(--p-surface-border);
+}
+
+.palette-header-icon {
+	font-size: 1.5rem;
+}
+
+.palette-header-label {
+	margin-inline-start: 0.25rem;
+	margin-inline-end: auto;
+	font-feature-settings: "tnum";
+}
+
+.palette-buttons {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.palette-buttons > * {
+	aspect-ratio: 1;
+	font-size: 1rem;
 }
 
 .palette-body {
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
-	margin: -0.25rem 0;
+	margin: -0.5rem 0 -0.25rem 0;
 }
 
 .color-grid {
