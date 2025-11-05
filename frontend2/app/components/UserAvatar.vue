@@ -49,7 +49,7 @@ defineEmits<{
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.p-overlaybadge .p-badge {
+.avatar-button :deep(.p-overlaybadge .p-badge) {
 	inset-block-start: auto;
 	inset-block-end: 0;
 	transform: translate(25%, 25%);

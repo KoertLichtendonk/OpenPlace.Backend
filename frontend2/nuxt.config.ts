@@ -133,9 +133,17 @@ export default defineNuxtConfig({
 	],
 
 	primevue: {
+		components: {
+			include: ["Avatar", "OverlayBadge", "Menu", "Badge", "Toast", "Button", "Card", "ProgressSpinner"]
+		},
+
 		options: {
 			theme: {
-				preset: theme
+				preset: theme,
+				options: {
+					darkModeSelector: "system",
+					cssLayer: false
+				}
 			}
 		}
 	},

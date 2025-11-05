@@ -1,25 +1,27 @@
-:root {
-	--p-backdrop-filter: blur(10px);
-	--p-content-background: #fffe;
-	--p-card-background: var(--p-content-background);
-	--p-menu-background: var(--p-content-background);
-	--p-toast-blur: 10px;
-	--p-toast-error-background: var(--p-content-background);
-	--p-toast-warn-background: var(--p-content-background);
-	--p-toast-success-background: var(--p-content-background);
-	--p-toast-info-background: var(--p-content-background);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer overrides {
 	:root {
-		--p-content-background: #18181bee;
+		--p-backdrop-filter: blur(10px);
+		--p-content-background: #fffe;
+		--p-card-background: var(--p-content-background);
+		--p-menu-background: var(--p-content-background);
+		--p-toast-blur: 10px;
+		--p-toast-error-background: var(--p-content-background);
+		--p-toast-warn-background: var(--p-content-background);
+		--p-toast-success-background: var(--p-content-background);
+		--p-toast-info-background: var(--p-content-background);
 	}
-}
 
-// Blur background
-.p-card,
-.p-menu {
-	backdrop-filter: var(--p-backdrop-filter);
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--p-content-background: #18181bee;
+		}
+	}
+
+	// Blur background
+	.p-card,
+	.p-menu {
+		backdrop-filter: var(--p-backdrop-filter);
+	}
 }
 
 // Blue Marble fixes
