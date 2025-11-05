@@ -123,30 +123,15 @@ importers:
 
   frontend2:
     dependencies:
-      '@napi-rs/canvas':
-        specifier: ^0.1.81
-        version: 0.1.81
       '@primeuix/themes':
         specifier: ^1.2.5
         version: 1.2.5
-      '@primevue/themes':
-        specifier: ^4.4.1
-        version: 4.4.1
-      '@prisma/client':
-        specifier: ^6.18.0
-        version: 6.18.0(prisma@6.18.0(magicast@0.5.0)(typescript@5.9.3))(typescript@5.9.3)
-      '@wxperia/liquid-glass-vue':
-        specifier: ^1.0.9
-        version: 1.0.9(typescript@5.9.3)
       bootstrap:
         specifier: ^5.3.8
         version: 5.3.8(@popperjs/core@2.11.8)
       maplibre-gl:
         specifier: ^5.10.0
         version: 5.10.0
-      moment:
-        specifier: ^2.30.1
-        version: 2.30.1
       nuxt:
         specifier: ~4.1.3
         version: 4.1.3(@parcel/watcher@2.5.1)(@types/node@24.9.2)(@vue/compiler-sfc@3.5.22)(db0@0.3.4)(eslint@9.38.0(jiti@2.6.1))(ioredis@5.8.2)(magicast@0.5.0)(optionator@0.9.4)(rollup@4.52.5)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3)(vite@7.1.12(@types/node@24.9.2)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(yaml@2.8.1)
@@ -159,12 +144,6 @@ importers:
       vue:
         specifier: ^3.5.22
         version: 3.5.22(typescript@5.9.3)
-      vue-maplibre-gl:
-        specifier: ^5.5.9
-        version: 5.5.9(maplibre-gl@5.10.0)(mitt@3.0.1)(vue@3.5.22(typescript@5.9.3))
-      vue-router:
-        specifier: ^4.5.1
-        version: 4.6.3(vue@3.5.22(typescript@5.9.3))
     devDependencies:
       '@nuxt/eslint':
         specifier: ^1.10.0
@@ -172,9 +151,6 @@ importers:
       '@primevue/nuxt-module':
         specifier: ^4.4.1
         version: 4.4.1(@babel/parser@7.28.5)(magicast@0.5.0)(vue@3.5.22(typescript@5.9.3))
-      '@types/lodash':
-        specifier: ^4.17.20
-        version: 4.17.20
       '@types/node':
         specifier: ^24.9.2
         version: 24.9.2
@@ -1541,10 +1517,6 @@ packages:
     resolution: {integrity: sha512-x1yLIcYBSHy1NGkJ9ui78NeO7QQV2kapSvDZHBK3G2WpnyAzgeoS3vAMzhyCKA0u4vf3n9KEaL4rol8Dp6LXnw==}
     engines: {node: '>=12.11.0'}
 
-  '@primevue/themes@4.4.1':
-    resolution: {integrity: sha512-3qofw+UhTG5rZXUU+RtYY1ea5Q84LvfHtDuzFLUSK9pL1SLS+S4CBnoMuVM9I009FdVyNGT0Bib3sLMf21SBVQ==}
-    engines: {node: '>=12.11.0'}
-
   '@prisma/client@6.18.0':
     resolution: {integrity: sha512-jnL2I9gDnPnw4A+4h5SuNn8Gc+1mL1Z79U/3I9eE2gbxJG1oSA+62ByPW4xkeDgwE0fqMzzpAZ7IHxYnLZ4iQA==}
     engines: {node: '>=18.18'}
@@ -1884,42 +1856,6 @@ packages:
   '@tsconfig/strictest@2.0.6':
     resolution: {integrity: sha512-tPOhmDhIUcDjvpDDYyiUdssP84Eqm7n5KxJe5J3/g+s6xoDIPAf+SIn06dhw7VkhxIvLOnhDDrX7tsqMHNEhDg==}
 
-  '@turf/area@7.2.0':
-    resolution: {integrity: sha512-zuTTdQ4eoTI9nSSjerIy4QwgvxqwJVciQJ8tOPuMHbXJ9N/dNjI7bU8tasjhxas/Cx3NE9NxVHtNpYHL0FSzoA==}
-
-  '@turf/bbox@7.2.0':
-    resolution: {integrity: sha512-wzHEjCXlYZiDludDbXkpBSmv8Zu6tPGLmJ1sXQ6qDwpLE1Ew3mcWqt8AaxfTP5QwDNQa3sf2vvgTEzNbPQkCiA==}
-
-  '@turf/boolean-point-in-polygon@7.2.0':
-    resolution: {integrity: sha512-lvEOjxeXIp+wPXgl9kJA97dqzMfNexjqHou+XHVcfxQgolctoJiRYmcVCWGpiZ9CBf/CJha1KmD1qQoRIsjLaA==}
-
-  '@turf/circle@7.2.0':
-    resolution: {integrity: sha512-1AbqBYtXhstrHmnW6jhLwsv7TtmT0mW58Hvl1uZXEDM1NCVXIR50yDipIeQPjrCuJ/Zdg/91gU8+4GuDCAxBGA==}
-
-  '@turf/clean-coords@7.2.0':
-    resolution: {integrity: sha512-+5+J1+D7wW7O/RDXn46IfCHuX1gIV1pIAQNSA7lcDbr3HQITZj334C4mOGZLEcGbsiXtlHWZiBtm785Vg8i+QQ==}
-
-  '@turf/clone@7.2.0':
-    resolution: {integrity: sha512-JlGUT+/5qoU5jqZmf6NMFIoLDY3O7jKd53Up+zbpJ2vzUp6QdwdNzwrsCeONhynWM13F0MVtPXH4AtdkrgFk4g==}
-
-  '@turf/destination@7.2.0':
-    resolution: {integrity: sha512-8DUxtOO0Fvrh1xclIUj3d9C5WS20D21F5E+j+X9Q+ju6fcM4huOqTg5ckV1DN2Pg8caABEc5HEZJnGch/5YnYQ==}
-
-  '@turf/distance@7.2.0':
-    resolution: {integrity: sha512-HBjjXIgEcD/wJYjv7/6OZj5yoky2oUvTtVeIAqO3lL80XRvoYmVg6vkOIu6NswkerwLDDNT9kl7+BFLJoHbh6Q==}
-
-  '@turf/helpers@7.2.0':
-    resolution: {integrity: sha512-cXo7bKNZoa7aC7ydLmUR02oB3IgDe7MxiPuRz3cCtYQHn+BJ6h1tihmamYDWWUlPHgSNF0i3ATc4WmDECZafKw==}
-
-  '@turf/invariant@7.2.0':
-    resolution: {integrity: sha512-kV4u8e7Gkpq+kPbAKNC21CmyrXzlbBgFjO1PhrHPgEdNqXqDawoZ3i6ivE3ULJj2rSesCjduUaC/wyvH/sNr2Q==}
-
-  '@turf/meta@7.2.0':
-    resolution: {integrity: sha512-igzTdHsQc8TV1RhPuOLVo74Px/hyPrVgVOTgjWQZzt3J9BVseCdpfY/0cJBdlSRI4S/yTmmHl7gAqjhpYH5Yaw==}
-
-  '@turf/simplify@7.2.0':
-    resolution: {integrity: sha512-9YHIfSc8BXQfi5IvEMbCeQYqNch0UawIGwbboJaoV8rodhtk6kKV2wrpXdGqk/6Thg6/RWvChJFKVVTjVrULyQ==}
-
   '@tybys/wasm-util@0.10.1':
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
 
@@ -1960,9 +1896,6 @@ packages:
 
   '@types/jsonwebtoken@9.0.10':
     resolution: {integrity: sha512-asx5hIG9Qmf/1oStypjanR7iKTv0gXQ1Ov/jfrX6kS/EO0OFni8orbmGCn0672NHR3kXHwpAwR+B368ZGN/2rA==}
-
-  '@types/lodash@4.17.20':
-    resolution: {integrity: sha512-H3MHACvFUEiujabxhaI/ImO6gUrd8oOurg7LQtS7mbwIXA/cUqWrvBsaeJ23aZEPk1TAYkurjfMbSELfoCXlGA==}
 
   '@types/mime@1.3.5':
     resolution: {integrity: sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==}
@@ -2267,9 +2200,6 @@ packages:
 
   '@vue/shared@3.5.22':
     resolution: {integrity: sha512-F4yc6palwq3TT0u+FYf0Ns4Tfl9GRFURDN2gWG7L1ecIaS/4fCIuFOjMTnCyjsu/OK6vaDKLCrGAa+KvvH+h4w==}
-
-  '@wxperia/liquid-glass-vue@1.0.9':
-    resolution: {integrity: sha512-uCGz2GIxhjMY6OshbYUmu+mNKhwiaLb5tdeeM7fdCXhrSrIqxPAirvZ15BtGfTi0yYKmodU6ssBIdjLg0PUhag==}
 
   '@zip.js/zip.js@2.8.8':
     resolution: {integrity: sha512-v0KutehhSAuaoFAFGLp+V4+UiZ1mIxQ8vNOYMD7k9ZJaBbtQV49MYlg568oRLiuwWDg2Di58Iw3Q0ESNWR+5JA==}
@@ -4150,9 +4080,6 @@ packages:
   mocked-exports@0.1.1:
     resolution: {integrity: sha512-aF7yRQr/Q0O2/4pIXm6PZ5G+jAd7QS4Yu8m+WEeEHGnbo+7mE36CbLSDQiXYV8bVL3NfmdeqPJct0tUlnjVSnA==}
 
-  moment@2.30.1:
-    resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
-
   mrmime@2.0.1:
     resolution: {integrity: sha512-Y3wQdFg2Va6etvQ5I82yUhGdsKrcYox6p7FfL1LbK2J4V01F9TGlepTIhnK24t7koZibmg82KGglhA1XK5IsLQ==}
     engines: {node: '>=10'}
@@ -4492,9 +4419,6 @@ packages:
   pluralize@8.0.0:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
-
-  point-in-polygon-hao@1.2.4:
-    resolution: {integrity: sha512-x2pcvXeqhRHlNRdhLs/tgFapAbSSe86wa/eqmj1G6pWftbEs5aVRJhRGM6FYSUERKu0PjekJzMq0gsI2XyiclQ==}
 
   possible-typed-array-names@1.1.0:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
@@ -4857,9 +4781,6 @@ packages:
 
   rfdc@1.4.1:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
-
-  robust-predicates@3.0.2:
-    resolution: {integrity: sha512-IXgzBWvWQwE6PrDI05OvmXUIruQTcoMDzRsOd5CDvHCVLcLHMTSYvOK5Cm46kWqlV3yAbuSpBZdJ5oP5OUoStg==}
 
   rollup-plugin-visualizer@6.0.5:
     resolution: {integrity: sha512-9+HlNgKCVbJDs8tVtjQ43US12eqaiHyyiLMdBwQ7vSZPiHMysGNo2E88TAp1si5wx8NAoYriI2A5kuKfIakmJg==}
@@ -5760,14 +5681,6 @@ packages:
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
-
-  vue-maplibre-gl@5.5.9:
-    resolution: {integrity: sha512-IAyLsojWw581+DAUN4vWgmMHfK+e4jNnhRH6FbPMz4eTkHzHzM/zm6eMYZG+3/leD21SliU3Syn6cTri0LVMJA==}
-    engines: {node: '>=20'}
-    peerDependencies:
-      maplibre-gl: ^5.1.0
-      mitt: ^3.0.1
-      vue: ^3.5.13
 
   vue-router@4.6.3:
     resolution: {integrity: sha512-ARBedLm9YlbvQomnmq91Os7ck6efydTSpRP3nuOKCvgJOHNrhRoJDSKtee8kcL1Vf7nz6U+PMBL+hTvR3bTVQg==}
@@ -7432,19 +7345,9 @@ snapshots:
       - supports-color
       - vue
 
-  '@primevue/themes@4.4.1':
-    dependencies:
-      '@primeuix/styled': 0.7.4
-      '@primeuix/themes': 1.2.5
-
   '@prisma/client@6.18.0(prisma@6.18.0(magicast@0.3.5)(typescript@5.9.3))(typescript@5.9.3)':
     optionalDependencies:
       prisma: 6.18.0(magicast@0.3.5)(typescript@5.9.3)
-      typescript: 5.9.3
-
-  '@prisma/client@6.18.0(prisma@6.18.0(magicast@0.5.0)(typescript@5.9.3))(typescript@5.9.3)':
-    optionalDependencies:
-      prisma: 6.18.0(magicast@0.5.0)(typescript@5.9.3)
       typescript: 5.9.3
 
   '@prisma/config@6.18.0(magicast@0.3.5)':
@@ -7455,16 +7358,6 @@ snapshots:
       empathic: 2.0.0
     transitivePeerDependencies:
       - magicast
-
-  '@prisma/config@6.18.0(magicast@0.5.0)':
-    dependencies:
-      c12: 3.1.0(magicast@0.5.0)
-      deepmerge-ts: 7.1.5
-      effect: 3.18.4
-      empathic: 2.0.0
-    transitivePeerDependencies:
-      - magicast
-    optional: true
 
   '@prisma/debug@6.18.0': {}
 
@@ -7734,87 +7627,6 @@ snapshots:
 
   '@tsconfig/strictest@2.0.6': {}
 
-  '@turf/area@7.2.0':
-    dependencies:
-      '@turf/helpers': 7.2.0
-      '@turf/meta': 7.2.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/bbox@7.2.0':
-    dependencies:
-      '@turf/helpers': 7.2.0
-      '@turf/meta': 7.2.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/boolean-point-in-polygon@7.2.0':
-    dependencies:
-      '@turf/helpers': 7.2.0
-      '@turf/invariant': 7.2.0
-      '@types/geojson': 7946.0.16
-      point-in-polygon-hao: 1.2.4
-      tslib: 2.8.1
-
-  '@turf/circle@7.2.0':
-    dependencies:
-      '@turf/destination': 7.2.0
-      '@turf/helpers': 7.2.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/clean-coords@7.2.0':
-    dependencies:
-      '@turf/helpers': 7.2.0
-      '@turf/invariant': 7.2.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/clone@7.2.0':
-    dependencies:
-      '@turf/helpers': 7.2.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/destination@7.2.0':
-    dependencies:
-      '@turf/helpers': 7.2.0
-      '@turf/invariant': 7.2.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/distance@7.2.0':
-    dependencies:
-      '@turf/helpers': 7.2.0
-      '@turf/invariant': 7.2.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/helpers@7.2.0':
-    dependencies:
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/invariant@7.2.0':
-    dependencies:
-      '@turf/helpers': 7.2.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
-  '@turf/meta@7.2.0':
-    dependencies:
-      '@turf/helpers': 7.2.0
-      '@types/geojson': 7946.0.16
-
-  '@turf/simplify@7.2.0':
-    dependencies:
-      '@turf/clean-coords': 7.2.0
-      '@turf/clone': 7.2.0
-      '@turf/helpers': 7.2.0
-      '@turf/meta': 7.2.0
-      '@types/geojson': 7946.0.16
-      tslib: 2.8.1
-
   '@tybys/wasm-util@0.10.1':
     dependencies:
       tslib: 2.8.1
@@ -7867,8 +7679,6 @@ snapshots:
     dependencies:
       '@types/ms': 2.1.0
       '@types/node': 24.9.2
-
-  '@types/lodash@4.17.20': {}
 
   '@types/mime@1.3.5': {}
 
@@ -8251,12 +8061,6 @@ snapshots:
 
   '@vue/shared@3.5.22': {}
 
-  '@wxperia/liquid-glass-vue@1.0.9(typescript@5.9.3)':
-    dependencies:
-      vue: 3.5.22(typescript@5.9.3)
-    transitivePeerDependencies:
-      - typescript
-
   '@zip.js/zip.js@2.8.8': {}
 
   abbrev@3.0.1: {}
@@ -8532,24 +8336,6 @@ snapshots:
       rc9: 2.1.2
     optionalDependencies:
       magicast: 0.3.5
-
-  c12@3.1.0(magicast@0.5.0):
-    dependencies:
-      chokidar: 4.0.3
-      confbox: 0.2.2
-      defu: 6.1.4
-      dotenv: 16.6.1
-      exsolve: 1.0.7
-      giget: 2.0.0
-      jiti: 2.6.1
-      ohash: 2.0.11
-      pathe: 2.0.3
-      perfect-debounce: 1.0.0
-      pkg-types: 2.3.0
-      rc9: 2.1.2
-    optionalDependencies:
-      magicast: 0.5.0
-    optional: true
 
   c12@3.3.1(magicast@0.3.5):
     dependencies:
@@ -10382,8 +10168,6 @@ snapshots:
 
   mocked-exports@0.1.1: {}
 
-  moment@2.30.1: {}
-
   mrmime@2.0.1: {}
 
   ms@2.1.3: {}
@@ -10938,10 +10722,6 @@ snapshots:
 
   pluralize@8.0.0: {}
 
-  point-in-polygon-hao@1.2.4:
-    dependencies:
-      robust-predicates: 3.0.2
-
   possible-typed-array-names@1.1.0: {}
 
   postcss-calc@10.1.1(postcss@8.5.6):
@@ -11140,16 +10920,6 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
-  prisma@6.18.0(magicast@0.5.0)(typescript@5.9.3):
-    dependencies:
-      '@prisma/config': 6.18.0(magicast@0.5.0)
-      '@prisma/engines': 6.18.0
-    optionalDependencies:
-      typescript: 5.9.3
-    transitivePeerDependencies:
-      - magicast
-    optional: true
-
   process-nextick-args@2.0.1: {}
 
   process@0.11.10: {}
@@ -11305,8 +11075,6 @@ snapshots:
   reusify@1.1.0: {}
 
   rfdc@1.4.1: {}
-
-  robust-predicates@3.0.2: {}
 
   rollup-plugin-visualizer@6.0.5(rollup@4.52.5):
     dependencies:
@@ -12299,19 +12067,6 @@ snapshots:
       semver: 7.7.3
     transitivePeerDependencies:
       - supports-color
-
-  vue-maplibre-gl@5.5.9(maplibre-gl@5.10.0)(mitt@3.0.1)(vue@3.5.22(typescript@5.9.3)):
-    dependencies:
-      '@turf/area': 7.2.0
-      '@turf/bbox': 7.2.0
-      '@turf/boolean-point-in-polygon': 7.2.0
-      '@turf/circle': 7.2.0
-      '@turf/clone': 7.2.0
-      '@turf/distance': 7.2.0
-      '@turf/simplify': 7.2.0
-      maplibre-gl: 5.10.0
-      mitt: 3.0.1
-      vue: 3.5.22(typescript@5.9.3)
 
   vue-router@4.6.3(vue@3.5.22(typescript@5.9.3)):
     dependencies:
