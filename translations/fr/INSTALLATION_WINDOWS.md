@@ -1,4 +1,4 @@
-# OpenPlace — Guide d’installation Windows
+# openplace — Guide d’installation Windows
 
 Ce guide vous aidera à préparer une machine **Windows** pour exécuter **openplace**.
 
