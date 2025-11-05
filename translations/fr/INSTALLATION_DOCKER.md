@@ -1,5 +1,5 @@
 
-# OpenPlace — Guide d’installation avec Docker
+# openplace — Guide d’installation avec Docker
 
 Ce guide vous aidera à exécuter **openplace** avec Docker.
 
