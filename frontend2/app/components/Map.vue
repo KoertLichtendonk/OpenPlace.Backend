@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-import type { Map as MaplibreMap } from "maplibre-gl";
+import type { Map as MaplibreMap, StyleSpecification } from "maplibre-gl";
 import { getPixelBounds, getPixelsBetween, getTileBounds, type LngLat, lngLatToTileCoords, TILE_SIZE, type TileCoords, ZOOM_LEVEL } from "~/utils/coordinates";
 
 // Expose things for user scripts to access
@@ -90,17 +90,27 @@ const lastDrawnCoords = ref<TileCoords | null>(null);
 const isDrawingActive = ref(false);
 const centerCoords = ref<TileCoords | null>(null);
 
-let saveLocationTimeout: number | null = null;
-let tileReloadInterval: number | null = null;
+let saveLocationTimeout: ReturnType<typeof setTimeout> | null = null;
+let tileReloadInterval: ReturnType<typeof setInterval> | null = null;
 let lastTileRefreshTime = 0;
 
 const tileCanvases = new Map<string, TileCanvas>();
 
 const darkMode = matchMedia("(prefers-color-scheme: dark)");
-const darkModeChanged = () => {
-	map?.setStyle(mapStyle.value);
+const darkModeState = ref(darkMode.matches);
+const darkModeChanged = (e: MediaQueryListEvent) => {
+	darkModeState.value = e.matches;
 };
-const mapStyle = ref(`/maps/styles/${darkMode.matches ? "fiord" : "liberty"}`);
+
+const mapStyleLight = ref<StyleSpecification | null>(null);
+const mapStyleDark = ref<StyleSpecification | null>(null);
+const mapStyle = computed(() => darkModeState.value ? mapStyleDark.value : mapStyleLight.value);
+
+watch(() => mapStyle.value, () => {
+	if (map) {
+		setUpMapLayers(map);
+	}
+});
 
 const getTileCanvas = (tileX: number, tileY: number): TileCanvas => {
 	const key = `${tileX}-${tileY}`;
@@ -117,8 +127,8 @@ const getTileCanvas = (tileX: number, tileY: number): TileCanvas => {
 
 	const originalImageData = ctx.getImageData(0, 0, TILE_SIZE, TILE_SIZE);
 
-	const sourceId = `tile-canvas-${key}`;
-	const layerId = `tile-canvas-layer-${key}`;
+	const sourceId = `openplace-tile-canvas-${key}`;
+	const layerId = `openplace-tile-canvas-layer-${key}`;
 
 	const tileCanvas: TileCanvas = {
 		canvas,
@@ -152,7 +162,7 @@ const getTileCanvas = (tileX: number, tileY: number): TileCanvas => {
 					"raster-opacity": 1,
 					"raster-resampling": currentZoom.value >= ZOOM_LEVEL ? "nearest" : "linear"
 				}
-			}, "pending-pixels-border");
+			}, "openplace-pending-pixels-border");
 		}
 	}
 
@@ -235,6 +245,18 @@ const removeAllCanvases = () => {
 };
 
 const setUpMapLayers = (mapInstance: MaplibreMap, savedZoom?: number) => {
+	mapInstance.setStyle(mapStyle.value, {
+		diff: true,
+		transformStyle: (previousStyle, nextStyle) => ({
+			...nextStyle,
+			layers: [
+				...nextStyle.layers,
+				...previousStyle?.layers.filter(({ id }) => id.startsWith("openplace-")) ?? []
+			],
+			sources: (previousStyle ?? nextStyle).sources
+		})
+	});
+
 	// Hide unwanted layers
 	const hideLayers = /^poi_|^landuse|^building(-3d)?$/;
 	for (const layer of mapInstance.getStyle().layers) {
@@ -250,8 +272,8 @@ const setUpMapLayers = (mapInstance: MaplibreMap, savedZoom?: number) => {
 	]);
 
 	// Add satellite
-	if (!mapInstance.getSource("satellite")) {
-		mapInstance.addSource("satellite", {
+	if (!mapInstance.getSource("openplace-satellite")) {
+		mapInstance.addSource("openplace-satellite", {
 			type: "raster",
 			tiles: [
 				// "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpeg"
@@ -262,21 +284,21 @@ const setUpMapLayers = (mapInstance: MaplibreMap, savedZoom?: number) => {
 	}
 
 	if (props.isSatellite) {
-		if (!mapInstance.getLayer("satellite")) {
+		if (!mapInstance.getLayer("openplace-satellite")) {
 			mapInstance.addLayer({
-				id: "satellite",
+				id: "openplace-satellite",
 				type: "raster",
-				source: "satellite"
+				source: "openplace-satellite"
 			}, "building");
 		}
 	} else {
-		if (mapInstance.getLayer("satellite")) {
-			mapInstance.removeLayer("satellite");
+		if (mapInstance.getLayer("openplace-satellite")) {
+			mapInstance.removeLayer("openplace-satellite");
 		}
 	}
 
-	if (!mapInstance.getSource("pixel-tiles")) {
-		mapInstance.addSource("pixel-tiles", {
+	if (!mapInstance.getSource("openplace-pixel-tiles")) {
+		mapInstance.addSource("openplace-pixel-tiles", {
 			type: "raster",
 			tiles: [],
 			tileSize: TILE_SIZE,
@@ -290,11 +312,11 @@ const setUpMapLayers = (mapInstance: MaplibreMap, savedZoom?: number) => {
 
 	const zoom = savedZoom ?? mapInstance.getZoom();
 	const resamplingMode = zoom >= ZOOM_LEVEL ? "nearest" : "linear";
-	if (!mapInstance.getLayer("pixel-tiles-layer")) {
+	if (!mapInstance.getLayer("openplace-pixel-tiles-layer")) {
 		mapInstance.addLayer({
-			id: "pixel-tiles-layer",
+			id: "openplace-pixel-tiles-layer",
 			type: "raster",
-			source: "pixel-tiles",
+			source: "openplace-pixel-tiles",
 			paint: {
 				"raster-opacity": 1,
 				"raster-resampling": resamplingMode
@@ -302,32 +324,32 @@ const setUpMapLayers = (mapInstance: MaplibreMap, savedZoom?: number) => {
 		});
 	}
 
-	if (!mapInstance.getSource("pixels")) {
-		mapInstance.addSource("pixels", {
+	if (!mapInstance.getSource("openplace-pixels")) {
+		mapInstance.addSource("openplace-pixels", {
 			type: "geojson",
 			data: pixelGeoJSON.value
 		});
 	}
 
-	if (!mapInstance.getSource("pending-pixels-border")) {
-		mapInstance.addSource("pending-pixels-border", {
+	if (!mapInstance.getSource("openplace-pending-pixels-border")) {
+		mapInstance.addSource("openplace-pending-pixels-border", {
 			type: "geojson",
 			data: pendingPixelBordersGeoJSON.value
 		});
 	}
 
-	if (!mapInstance.getSource("hover")) {
-		mapInstance.addSource("hover", {
+	if (!mapInstance.getSource("openplace-hover")) {
+		mapInstance.addSource("openplace-hover", {
 			type: "geojson",
 			data: hoverGeoJSON.value
 		});
 	}
 
-	if (!mapInstance.getLayer("pending-pixels-border")) {
+	if (!mapInstance.getLayer("openplace-pending-pixels-border")) {
 		mapInstance.addLayer({
-			id: "pending-pixels-border",
+			id: "openplace-pending-pixels-border",
 			type: "line",
-			source: "pending-pixels-border",
+			source: "openplace-pending-pixels-border",
 			paint: {
 				"line-color": "#fff",
 				"line-width": 4,
@@ -336,11 +358,11 @@ const setUpMapLayers = (mapInstance: MaplibreMap, savedZoom?: number) => {
 		});
 	}
 
-	if (!mapInstance.getLayer("hover-border")) {
+	if (!mapInstance.getLayer("openplace-hover-border")) {
 		mapInstance.addLayer({
-			id: "hover-border",
+			id: "openplace-hover-border",
 			type: "line",
-			source: "hover",
+			source: "openplace-hover",
 			paint: {
 				"line-color": "#fff",
 				"line-width": 4,
@@ -471,9 +493,9 @@ const updateFavoriteMarkers = async () => {
 };
 
 const refreshTiles = () => {
-	if (map && map.getSource("pixel-tiles")) {
+	if (map && map.getSource("openplace-pixel-tiles")) {
 		const config = useRuntimeConfig();
-		const source = map.getSource("pixel-tiles");
+		const source = map.getSource("openplace-pixel-tiles");
 		// TODO: Types?
 		if (source && "setTiles" in source && typeof source.setTiles === "function") {
 			// Force maplibre to fetch again by using a fragment
@@ -510,13 +532,18 @@ onMounted(async () => {
 		return;
 	}
 
+	[mapStyleLight.value, mapStyleDark.value] = await Promise.all([
+		$fetch<StyleSpecification>("/maps/styles/liberty"),
+		$fetch<StyleSpecification>("/maps/styles/fiord")
+	]);
+
 	// Dynamically import maplibre-gl as it can’t be SSR rendered
 	const maplibregl = (await import("maplibre-gl")).default;
 
 	map = new maplibregl.Map({
 		// TODO: Fix type
 		container: mapContainer.value as any,
-		style: mapStyle.value,
+		style: mapStyle.value!,
 		center: props.initialLocation.center,
 		zoom: props.initialLocation.zoom,
 		minZoom: 0,
@@ -658,9 +685,9 @@ onMounted(async () => {
 		currentZoom.value = map!.getZoom();
 
 		// Switch to nearest neighbor when above native zoom level
-		if (map!.getLayer("pixel-tiles-layer")) {
+		if (map!.getLayer("openplace-pixel-tiles-layer")) {
 			const resamplingMode = currentZoom.value >= ZOOM_LEVEL ? "nearest" : "linear";
-			map!.setPaintProperty("pixel-tiles-layer", "raster-resampling", resamplingMode);
+			map!.setPaintProperty("openplace-pixel-tiles-layer", "raster-resampling", resamplingMode);
 		}
 
 		updateCursor();
@@ -708,21 +735,21 @@ watch(() => props.pixels, newPixels => {
 }, { deep: true });
 
 watch(pixelGeoJSON, () => {
-	const pixels = map?.getSource("pixels");
+	const pixels = map?.getSource("openplace-pixels");
 	if (pixels && "setData" in pixels && typeof pixels.setData === "function") {
 		pixels.setData(pixelGeoJSON.value);
 	}
 }, { deep: true });
 
 watch(pendingPixelBordersGeoJSON, () => {
-	const borders = map?.getSource("pending-pixels-border");
+	const borders = map?.getSource("openplace-pending-pixels-border");
 	if (borders && "setData" in borders && typeof borders.setData === "function") {
 		borders.setData(pendingPixelBordersGeoJSON.value);
 	}
 }, { deep: true });
 
 watch(hoverGeoJSON, () => {
-	const pixels = map?.getSource("hover");
+	const pixels = map?.getSource("openplace-hover");
 	if (pixels && "setData" in pixels && typeof pixels.setData === "function") {
 		pixels.setData(hoverGeoJSON.value);
 	}

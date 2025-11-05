@@ -12,7 +12,7 @@ export const useCharges = () => {
 	// Recharge timer
 	const timeUntilNextCharge = ref(0);
 	let lastRechargeTime = Date.now();
-	let interval: number | null = null;
+	let interval: ReturnType<typeof setInterval> | null = null;
 
 	// Charges available
 	const currentCharges = computed(() => {
