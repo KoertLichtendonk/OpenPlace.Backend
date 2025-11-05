@@ -71,7 +71,7 @@ export const useUserProfile = () => {
 		}
 	};
 
-	const login = () => globalThis.location.href = `${baseURL}/login`;
+	const login = () => location.href = `${baseURL}/login`;
 
 	return {
 		fetchUserProfile,

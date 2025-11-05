@@ -28,6 +28,11 @@ declare global {
 	}
 }
 
+export interface LocationWithZoom {
+	center: LngLat;
+	zoom: number;
+}
+
 interface Pixel {
 	id: string;
 	tileCoords: TileCoords;
@@ -51,6 +56,7 @@ export interface FavoriteLocation {
 }
 
 const props = defineProps<{
+	initialLocation: LocationWithZoom;
 	pixels: Pixel[];
 	isDrawing: boolean;
 	isSatellite: boolean;
@@ -65,6 +71,7 @@ const emit = defineEmits<{
 	drawPixels: [coords: TileCoords[]];
 	bearingChange: [bearing: number];
 	favoriteClick: [favorite: FavoriteLocation];
+	saveCurrentLocation: [];
 }>();
 
 const TILE_RELOAD_INTERVAL = 15_000;
@@ -506,22 +513,12 @@ onMounted(async () => {
 	// Dynamically import maplibre-gl as it can’t be SSR rendered
 	const maplibregl = (await import("maplibre-gl")).default;
 
-	let savedLocation = null;
-	try {
-		const locationStr = localStorage["location"];
-		if (locationStr) {
-			savedLocation = JSON.parse(locationStr);
-		}
-	} catch {
-		// Ignore
-	}
-
 	map = new maplibregl.Map({
 		// TODO: Fix type
 		container: mapContainer.value as any,
 		style: mapStyle.value,
-		center: savedLocation ? [savedLocation.lng, savedLocation.lat] : [151.208, -33.852],
-		zoom: savedLocation?.zoom ?? CLOSE_ZOOM_LEVEL,
+		center: props.initialLocation.center,
+		zoom: props.initialLocation.zoom,
 		minZoom: 0,
 		maxZoom: 22,
 		doubleClickZoom: false,
@@ -646,14 +643,7 @@ onMounted(async () => {
 
 	const saveLocation = () => {
 		if (map) {
-			try {
-				localStorage["location"] = JSON.stringify({
-					...map.getCenter(),
-					zoom: map.getZoom()
-				});
-			} catch {
-				// Ignore?
-			}
+			emit("saveCurrentLocation");
 		}
 	};
 

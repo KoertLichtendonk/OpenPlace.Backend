@@ -5,6 +5,7 @@
 		<ClientOnly>
 			<Map
 				ref="mapRef"
+				:initial-location="savedLocation"
 				:pixels="pixels"
 				:is-drawing="isPaintOpen"
 				:is-satellite="isSatellite"
@@ -15,6 +16,7 @@
 				@draw-pixels="handleDrawPixels"
 				@bearing-change="mapBearing = $event"
 				@favorite-click="handleFavoriteClick"
+				@save-current-location="saveCurrentLocation"
 			/>
 			<template #fallback>
 				<div class="map-loading" />
@@ -166,7 +168,7 @@
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import Toast, { type ToastMessageOptions } from "primevue/toast";
 import { useToast } from "primevue/usetoast";
-import Map from "~/components/Map.vue";
+import Map, { type LocationWithZoom } from "~/components/Map.vue";
 import PaintButton from "~/components/PaintButton.vue";
 import ColorPalette from "~/components/ColorPalette.vue";
 import UserAvatar from "~/components/UserAvatar.vue";
@@ -184,6 +186,7 @@ interface Pixel {
 }
 
 const USER_RELOAD_INTERVAL = 15_000;
+const DEFAULT_COORDS: LngLat = [151.208, -33.852];
 
 const isPaintOpen = ref(false);
 const isSatellite = ref(false);
@@ -222,7 +225,47 @@ const {
 	commitPixels
 } = useCharges();
 
+const { fetchUserProfile, logout, login } = useUserProfile();
+const { submitPixels } = usePaint();
+
 const isLoggedIn = computed(() => userProfile.value !== null);
+
+const handleError = (error: unknown) => {
+	const summary = error instanceof Error ? error.message : String(error);
+	toast.add({
+		severity: "error",
+		summary,
+		life: 5000
+	});
+};
+
+const savedLocation = computed((): LocationWithZoom => {
+	let location: { lng: number; lat: number; zoom: number; } | null = null;
+	try {
+		const locationStr = localStorage["location"];
+		if (locationStr) {
+			location = JSON.parse(locationStr);
+		}
+	} catch {
+		// Ignore
+	}
+
+	return {
+		center: location ? [location.lng, location.lat] : DEFAULT_COORDS,
+		zoom: location?.zoom ?? CLOSE_ZOOM_LEVEL
+	};
+});
+
+const saveCurrentLocation = () => {
+	try {
+		localStorage["location"] = JSON.stringify({
+			...mapRef.value.getCenter(),
+			zoom: mapRef.value.getZoom()
+		});
+	} catch {
+		// Ignore?
+	}
+};
 
 const user = computed<UserProfile | null>(() => {
 	const value = userProfile.value;
@@ -243,25 +286,21 @@ const user = computed<UserProfile | null>(() => {
 	};
 });
 
-const { fetchUserProfile, logout, login } = useUserProfile();
-const { submitPixels } = usePaint();
-
-const handlePopState = () => {
-	// Handle browser back/forward navigation
-	const urlParams = new URLSearchParams(globalThis.location.search);
-	const lat = urlParams.get("lat");
-	const lng = urlParams.get("lng");
-	const zoom = urlParams.get("zoom");
-
-	if (lat && lng && mapRef.value) {
-		const latitude = Number.parseFloat(lat);
-		const longitude = Number.parseFloat(lng);
-		const zoomLevel = zoom ? Number.parseFloat(zoom) : 15;
-
-		if (!Number.isNaN(latitude) && !Number.isNaN(longitude)) {
-			// Fly with animation on back/forward navigation
-			mapRef.value.flyToLocation(latitude, longitude, zoomLevel);
+const updateUserProfile = async () => {
+	try {
+		lastUserProfileFetch = Date.now();
+		const profile = await fetchUserProfile();
+		userProfile.value = profile;
+		if (profile) {
+			initialize(
+				profile.charges.count,
+				profile.charges.max,
+				profile.charges.cooldownMs
+			);
 		}
+	} catch (error) {
+		console.error("Failed to fetch user profile:", error);
+		handleError(error);
 	}
 };
 
@@ -284,6 +323,7 @@ const handleWindowFocus = async () => {
 		}
 	} catch (error) {
 		console.error("Failed to refresh user profile on focus:", error);
+		handleError(error);
 	}
 };
 
@@ -309,12 +349,13 @@ onMounted(async () => {
 		}
 	} catch (error) {
 		console.error("Failed to fetch user profile:", error);
+		handleError(error);
 	}
 
 	isLoading.value = false;
 
 	// Jump to url params
-	const params = new URLSearchParams(globalThis.location.search);
+	const params = new URLSearchParams(location.search);
 	const latStr = params.get("lat");
 	const lngStr = params.get("lng");
 	const zoomStr = params.get("zoom");
@@ -327,14 +368,14 @@ onMounted(async () => {
 		}
 	}
 
-	globalThis.addEventListener("popstate", handlePopState);
+	globalThis.addEventListener("popstate", popMapLocation);
 	globalThis.addEventListener("focus", handleWindowFocus);
 	globalThis.addEventListener("beforeunload", handleBeforeUnload);
 	document.addEventListener("keydown", handleKeyDown);
 });
 
 onUnmounted(() => {
-	globalThis.removeEventListener("popstate", handlePopState);
+	globalThis.removeEventListener("popstate", popMapLocation);
 	globalThis.removeEventListener("focus", handleWindowFocus);
 	globalThis.removeEventListener("beforeunload", handleBeforeUnload);
 	document.removeEventListener("keydown", handleKeyDown);
@@ -348,11 +389,31 @@ const pushMapLocation = (center?: LngLat, zoom?: number) => {
 	const [lng, lat] = center ?? mapRef.value.getCenter();
 	const zoomValue = zoom ?? mapRef.value.getZoom();
 
-	const url = new URL(globalThis.location.href);
+	const url = new URL(location.href);
 	url.searchParams.set("lat", lat.toFixed(6));
 	url.searchParams.set("lng", lng.toFixed(6));
 	url.searchParams.set("zoom", zoomValue.toFixed(2));
-	globalThis.history.pushState({}, "", url);
+	history.pushState({}, "", url);
+};
+
+const popMapLocation = () => {
+	if (!mapRef.value) {
+		return;
+	}
+
+	const params = new URLSearchParams(location.search);
+	const latStr = params.get("lat");
+	const lngStr = params.get("lng");
+	const zoomStr = params.get("zoom");
+
+	if (latStr && lngStr) {
+		const [lat, lng] = [Number.parseFloat(latStr), Number.parseFloat(lngStr)];
+		const zoom = Number.parseFloat(zoomStr ?? "") || CLOSE_ZOOM_LEVEL;
+
+		if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
+			mapRef.value.flyToLocation(lat, lng, zoom);
+		}
+	}
 };
 
 const clearPendingPixels = () => {
@@ -522,26 +583,13 @@ const handleSubmitPixels = async () => {
 		// Reset state
 		pixels.value = [];
 		isPaintOpen.value = false;
-	} catch (error: unknown) {
+	} catch (error) {
 		console.error("Failed to submit pixels:", error);
-		const message = error instanceof Error ? error.message : String(error);
+		handleError(error);
 	}
 
 	// Get new charges from server
-	try {
-		lastUserProfileFetch = Date.now();
-		const profile = await fetchUserProfile();
-		userProfile.value = profile;
-		if (profile) {
-			initialize(
-				profile.charges.count,
-				profile.charges.max,
-				profile.charges.cooldownMs
-			);
-		}
-	} catch (error) {
-		console.error("Failed to refresh user profile after painting:", error);
-	}
+	updateUserProfile();
 };
 
 const handleLogin = () => {
@@ -561,8 +609,9 @@ const handleFavoriteChanged = async () => {
 	try {
 		lastUserProfileFetch = Date.now();
 		userProfile.value = await fetchUserProfile();
-	} catch (error: unknown) {
+	} catch (error) {
 		console.error("Failed to refresh user profile:", error);
+		handleError(error);
 	}
 };
 
@@ -596,24 +645,29 @@ const goToRandom = async () => {
 
 	isLoadingRandom.value = true;
 
-	const config = useRuntimeConfig();
-	const response = await fetch(`${config.public.backendUrl}/s0/tile/random`, {
-		credentials: "include"
-	});
+	try {
+		const config = useRuntimeConfig();
+		const response = await fetch(`${config.public.backendUrl}/s0/tile/random`, {
+			credentials: "include"
+		});
 
-	const data = await response.json() as {
-		pixel: { x: number; y: number };
-		tile: { x: number; y: number };
-	};
-	const tileCoords: TileCoords = {
-		tile: [data.tile.x, data.tile.y],
-		pixel: [data.pixel.x, data.pixel.y]
-	};
-	const [lng, lat] = tileCoordsToLngLat(tileCoords);
+		const data = await response.json() as {
+			pixel: { x: number; y: number };
+			tile: { x: number; y: number };
+		};
+		const tileCoords: TileCoords = {
+			tile: [data.tile.x, data.tile.y],
+			pixel: [data.pixel.x, data.pixel.y]
+		};
+		const [lng, lat] = tileCoordsToLngLat(tileCoords);
 
-	randomTargetCoords.value = { lat, lng, zoom: CLOSE_ZOOM_LEVEL };
-	isAnimatingToRandom.value = true;
-	mapRef.value?.flyToLocation(lat, lng, CLOSE_ZOOM_LEVEL);
+		randomTargetCoords.value = { lat, lng, zoom: CLOSE_ZOOM_LEVEL };
+		isAnimatingToRandom.value = true;
+		mapRef.value?.flyToLocation(lat, lng, CLOSE_ZOOM_LEVEL);
+	} catch (error) {
+		console.error("Failed to get random pixel:", error);
+		handleError(error);
+	}
 
 	// To support skipping the animation by clicking the button again
 	setTimeout(() => {
