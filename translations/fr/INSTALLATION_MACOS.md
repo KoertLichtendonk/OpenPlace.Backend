@@ -1,4 +1,4 @@
-# # openplace — Guide d’installation MacOS
+# openplace — Guide d’installation MacOS
 
 Ce guide vous aidera à préparer une machine **macOS** pour exécuter **OpenPlace**.
 
