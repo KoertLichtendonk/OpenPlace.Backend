@@ -60,10 +60,18 @@
 
 			<div class="app-overlays-profile">
 				<div v-if="isLoggedIn">
-					<UserAvatar
-						:user="user"
+					<Button
+						severity="secondary"
+						raised
+						rounded
+						class="app-overlays--avatar-button"
+						aria-label="Toggle user menu"
 						@click="toggleUserMenu"
+					>
+						<UserAvatar
+							:user="user"
 					/>
+					</Button>
 
 					<UserMenu
 						ref="userMenuRef"
@@ -698,5 +706,11 @@ const goToRandom = async () => {
 .app-overlays--button {
 	font-size: 1.1rem;
 	aspect-ratio: 1;
+}
+
+.app-overlays--avatar-button {
+	padding: 0;
+	margin: 0;
+	overflow: visible;
 }
 </style>

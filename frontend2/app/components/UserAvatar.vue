@@ -1,22 +1,19 @@
 <template>
-	<button
-		class="avatar-button"
-		@click="$emit('click', $event)"
-	>
+	<div class="avatar">
 		<OverlayBadge
-			:value="user.level"
+			:value="user.level || undefined"
 			size="small"
-			class="avatar-button-badge"
+			class="avatar-badge"
 		>
 			<Avatar
 				:label="user.username.charAt(0).toUpperCase()"
 				:image="user.avatar || undefined"
 				size="large"
 				shape="circle"
-				class="avatar-button-avatar"
+				class="avatar-avatar"
 			/>
-			</OverlayBadge>
-	</button>
+		</OverlayBadge>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -30,30 +27,14 @@ defineProps<{
 		avatar: string;
 	};
 }>();
-
-defineEmits<{
-	click: [event: Event];
-}>();
 </script>
 
 <style scoped>
-.avatar-button {
-	position: relative;
-	background: transparent;
-	padding: 0;
-	margin: 0;
-	border: 0;
-}
-
-.avatar-button-avatar {
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.avatar-button :deep(.p-overlaybadge .p-badge) {
-	inset-block-start: auto;
-	inset-block-end: 0;
+.avatar :deep(.p-overlaybadge .p-badge) {
+	--p-badge-padding: 0 0.25rem;
+	inset: auto 0 0 auto;
 	transform: translate(25%, 25%);
-	transform-origin: 0 0;
+	transform-origin: 100% 100%;
 	outline-width: 0;
 	border-radius: 999px;
 }

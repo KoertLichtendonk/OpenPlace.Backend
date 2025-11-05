@@ -8,17 +8,8 @@
 			<div class="user-menu-header">
 				<div class="user-info">
 					<div class="avatar-container">
-						<Avatar
-							:label="user.username.charAt(0).toUpperCase()"
-							:image="user.avatar"
-							size="large"
-							shape="circle"
-							style="background-color: #4ade80;"
-						/>
-						<Badge
-							:value="user.level"
-							severity="secondary"
-							class="level-badge"
+						<UserAvatar
+							:user="user"
 						/>
 					</div>
 					<div class="user-details">
@@ -186,5 +177,6 @@ defineExpose({
 
 .country-flag {
 	font-size: 1.25rem;
+	margin-top: -0.25rem;
 }
 </style>
