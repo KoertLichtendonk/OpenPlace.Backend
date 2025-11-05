@@ -151,6 +151,7 @@ export default defineNuxtConfig({
 	css: [
 		"bootstrap/dist/css/bootstrap-reboot.min.css",
 		"maplibre-gl/dist/maplibre-gl.css",
+		"@fontsource-variable/pixelify-sans/wght.css",
 		"~/assets/common.scss"
 	]
 });

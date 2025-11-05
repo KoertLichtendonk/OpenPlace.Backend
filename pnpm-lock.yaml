@@ -123,6 +123,9 @@ importers:
 
   frontend2:
     dependencies:
+      '@fontsource-variable/pixelify-sans':
+        specifier: ^5.2.7
+        version: 5.2.7
       '@primeuix/themes':
         specifier: ^1.2.5
         version: 1.2.5
@@ -564,6 +567,9 @@ packages:
   '@eslint/plugin-kit@0.4.0':
     resolution: {integrity: sha512-sB5uyeq+dwCWyPi31B2gQlVlo+j5brPlWx4yZBrEaRo/nhdDE8Xke1gsGgtiBdaBTxuTkceLVuVt/pclrasb0A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@fontsource-variable/pixelify-sans@5.2.7':
+    resolution: {integrity: sha512-IbQ7po3a7bQuguwyGQ7x7kMUCYvHjzxTdc7lYAcqzgR87MQb+vf8fuu4hjGyFLlWaDhS6QEe0jrS9dmCJ9ZlYw==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -6263,6 +6269,8 @@ snapshots:
     dependencies:
       '@eslint/core': 0.16.0
       levn: 0.4.1
+
+  '@fontsource-variable/pixelify-sans@5.2.7': {}
 
   '@humanfs/core@0.19.1': {}
 

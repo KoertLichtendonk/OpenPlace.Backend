@@ -1,5 +1,10 @@
 <template>
-	<div class="app-container">
+	<div
+		class="app-container"
+		:style="{
+			'display': isLoading ? 'none' : ''
+		}"
+	>
 		<Toast />
 
 		<ClientOnly>
@@ -25,6 +30,17 @@
 
 		<div class="app-overlays">
 			<div class="app-overlays-zoom">
+				<Button
+					severity="secondary"
+					raised
+					rounded
+					class="app-overlays--button"
+					aria-label="About openplace"
+					@click="handleAbout"
+				>
+					<Icon name="info" />
+				</Button>
+
 				<Button
 					severity="secondary"
 					raised
@@ -161,6 +177,11 @@
 			@favorite-added="handleFavoriteChanged"
 			@favorite-removed="handleFavoriteChanged"
 		/>
+
+		<AboutDialog
+			:is-open="isAboutOpen"
+			@close="isAboutOpen = false"
+		/>
 	</div>
 </template>
 
@@ -173,6 +194,7 @@ import ColorPalette from "~/components/ColorPalette.vue";
 import UserAvatar from "~/components/UserAvatar.vue";
 import UserMenu from "~/components/UserMenu.vue";
 import PixelInfo from "~/components/PixelInfo.vue";
+import NotificationDialog from "~/components/NotificationDialog.vue";
 import { CLOSE_ZOOM_LEVEL, getPixelId, type LngLat, lngLatToTileCoords, type TileCoords, tileCoordsToLngLat, ZOOM_LEVEL } from "~/utils/coordinates";
 import { type UserProfile, useUserProfile } from "~/composables/useUserProfile";
 import { useCharges } from "~/composables/useCharges";
@@ -192,6 +214,7 @@ const isPaintOpen = ref(false);
 const isSatellite = ref(false);
 const isUserMenuOpen = ref(false);
 const isPixelInfoOpen = ref(false);
+const isAboutOpen = ref(false);
 const selectedColor = ref("rgba(0,0,0,1)");
 const isEraserMode = ref(false);
 const pixels = ref<Pixel[]>([]);
@@ -628,6 +651,10 @@ const handleFavoriteClick = (favorite: { id: number; name: string; latitude: num
 	// Open pixel info
 	const tileCoords = lngLatToTileCoords([favorite.longitude, favorite.latitude]);
 	selectedPixelCoords.value = tileCoords;
+};
+
+const handleAbout = () => {
+	isAboutOpen.value = true;
 };
 
 const zoomIn = () => mapRef.value?.zoomIn();
