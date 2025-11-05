@@ -166,7 +166,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
-import Toast, { type ToastMessageOptions } from "primevue/toast";
+import Toast from "primevue/toast";
 import Map, { type LocationWithZoom } from "~/components/Map.vue";
 import PaintButton from "~/components/PaintButton.vue";
 import ColorPalette from "~/components/ColorPalette.vue";

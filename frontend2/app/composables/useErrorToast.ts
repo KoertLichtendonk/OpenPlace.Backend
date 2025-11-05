@@ -25,8 +25,17 @@ export const useErrorToast = () => {
 
 		// If this is a fetch error, use message from the server if it exists
 		if (error instanceof FetchError) {
+			const status = error.statusCode ?? 0;
+			if (status === 500) {
+				summary = "A server error occurred. Try again later.";
+			} else if (status >= 500 && status < 600) {
+				summary = "The server is temporarily unavailable. Try again shortly.";
+			} else {
+				summary = `Unknown server error. Try again later.\n${summary}`;
+			}
+
 			const data = error.data as { error?: string; };
-			if (data.error) {
+			if (data?.error) {
 				summary = data.error;
 			}
 		}
