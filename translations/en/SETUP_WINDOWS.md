@@ -1,4 +1,4 @@
-# OpenPlace — Windows Setup Guide
+# openplace — Windows Setup Guide
 
 This guide will help you prepare a **Windows** machine to run **openplace**.
 

@@ -1,4 +1,4 @@
-# OpenPlace — Docker Setup Guide
+# openplace — Docker Setup Guide
 
 This guide will help you run **openplace** with Docker.
 

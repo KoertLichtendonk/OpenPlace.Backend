@@ -1,4 +1,4 @@
-# Openplace — Installationsanweisungen unter Windows
+# openplace — Installationsanweisungen unter Windows
 
 Diese Anweisungen helfen Ihnen, ein **Windows**-Gerät für die Ausführung von **openplace** vorzubereiten.
 

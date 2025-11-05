@@ -1,4 +1,4 @@
-# Getting Started with OpenPlace (macOS)
+# openplace — MacOS Setup Guide
 
 This guide will help you prepare a **macOS** machine to run **OpenPlace**.
 

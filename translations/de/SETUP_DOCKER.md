@@ -1,4 +1,4 @@
-# Openplace — Installationsanweisungen unter Docker
+# openplace — Installationsanweisungen unter Docker
 
 Diese Anweisungen helfen Ihnen, **openplace** über Docker zu laufen.
 

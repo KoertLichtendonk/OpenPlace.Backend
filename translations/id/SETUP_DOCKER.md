@@ -1,4 +1,4 @@
-# OpenPlace — Panduan Pengaturan Docker
+# openplace — Panduan Pengaturan Docker
 
 Panduan ini akan membantu Anda menjalankan **openplace** dengan Docker..
 

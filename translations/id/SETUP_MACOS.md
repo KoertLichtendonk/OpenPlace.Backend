@@ -1,4 +1,4 @@
-# Memulai dengan OpenPlace (macOS)
+# openplace — Panduan Pengaturan MacOS
 
 Panduan ini akan membantu Anda menyiapkan **macOS** untuk menjalankan **OpenPlace**.
 

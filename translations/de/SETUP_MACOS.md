@@ -1,4 +1,4 @@
-# Openplace - Installationsanweisungen unter macOS
+# openplace - Installationsanweisungen unter macOS
 
 Diese Anweisungen helfen Ihnen, ein **macOS**-Gerät für die Ausführung von **openplace** vorzubereiten.
 
