@@ -12,9 +12,8 @@
 }
 
 .icon-wrapper :deep(svg) {
+	display: inline-block;
 	width: 1em;
 	height: 1em;
-	display: inline-block;
-	vertical-align: -0.125em;
 }
 </style>
