@@ -801,6 +801,7 @@ const jumpToLocation = (latitude: number, longitude: number, zoom = ZOOM_LEVEL) 
 const zoomIn = () => map?.zoomIn();
 const zoomOut = () => map?.zoomOut();
 const getZoom = () => map?.getZoom() ?? ZOOM_LEVEL;
+const getCenter = () => map?.getCenter();
 
 const hasUncommittedPixels = () => {
 	return tileCanvases.values()
@@ -817,6 +818,7 @@ defineExpose({
 	zoomIn,
 	zoomOut,
 	getZoom,
+	getCenter,
 	hasUncommittedPixels
 });
 </script>

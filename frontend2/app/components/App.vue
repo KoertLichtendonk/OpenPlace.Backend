@@ -70,7 +70,7 @@
 					>
 						<UserAvatar
 							:user="user"
-					/>
+						/>
 					</Button>
 
 					<UserMenu
@@ -126,7 +126,7 @@
 					:max-charges="maxCharges ?? 0"
 					:is-drawing="isPaintOpen"
 					:time-until-next="formattedTime"
-					@click="isPaintOpen = !isPaintOpen"
+					@click="handlePaintButtonClick"
 				/>
 			</div>
 
@@ -321,9 +321,8 @@ onMounted(async () => {
 
 	if (latStr && lngStr && mapRef.value) {
 		const [lat, lng] = [Number.parseFloat(latStr), Number.parseFloat(lngStr)];
-		const zoom = Number.parseFloat(zoomStr ?? "") || 15;
-
 		if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
+			const zoom = Number.parseFloat(zoomStr ?? "") || CLOSE_ZOOM_LEVEL;
 			mapRef.value.jumpToLocation(lat, lng, zoom);
 		}
 	}
@@ -340,6 +339,21 @@ onUnmounted(() => {
 	globalThis.removeEventListener("beforeunload", handleBeforeUnload);
 	document.removeEventListener("keydown", handleKeyDown);
 });
+
+const pushMapLocation = (center?: LngLat, zoom?: number) => {
+	if (!mapRef.value) {
+		return;
+	}
+
+	const [lng, lat] = center ?? mapRef.value.getCenter();
+	const zoomValue = zoom ?? mapRef.value.getZoom();
+
+	const url = new URL(globalThis.location.href);
+	url.searchParams.set("lat", lat.toFixed(6));
+	url.searchParams.set("lng", lng.toFixed(6));
+	url.searchParams.set("zoom", zoomValue.toFixed(2));
+	globalThis.history.pushState({}, "", url);
+};
 
 const clearPendingPixels = () => {
 	const pixelCount = pixels.value.length;
@@ -358,6 +372,7 @@ const handleClosePaint = () => {
 
 const handleColorSelect = (color: string) => {
 	selectedColor.value = color;
+	isEraserMode.value = false;
 };
 
 const handleKeyDown = (event: KeyboardEvent) => {
@@ -415,9 +430,7 @@ const drawPixelAtCoords = (tileCoords: TileCoords) => {
 	}
 };
 
-const drawPixel = (coords: LngLat) => {
-	drawPixelAtCoords(lngLatToTileCoords(coords));
-};
+const drawPixel = (coords: LngLat) => drawPixelAtCoords(lngLatToTileCoords(coords));
 
 const handleDrawPixels = (coords: TileCoords[]) => {
 	for (const coord of coords) {
@@ -454,16 +467,7 @@ const handleMapClick = (event: LngLat) => {
 		// Show pixel info
 		const tileCoords = lngLatToTileCoords(event);
 		selectedPixelCoords.value = tileCoords;
-
-		if (mapRef.value) {
-			const currentZoom = mapRef.value.getZoom();
-			const [lng, lat] = event;
-			const url = new URL(globalThis.location.href);
-			url.searchParams.set("lat", lat.toFixed(6));
-			url.searchParams.set("lng", lng.toFixed(6));
-			url.searchParams.set("zoom", currentZoom.toFixed(2));
-			globalThis.history.pushState({}, "", url);
-		}
+		pushMapLocation(event);
 	}
 };
 
@@ -491,6 +495,11 @@ const resetMapRotation = () => {
 	if (mapRef.value) {
 		mapRef.value.resetBearing();
 	}
+};
+
+const handlePaintButtonClick = () => {
+	isPaintOpen.value = true;
+	pushMapLocation();
 };
 
 const handleSubmitPixels = async () => {
@@ -558,19 +567,14 @@ const handleFavoriteChanged = async () => {
 };
 
 const handleFavoriteClick = (favorite: { id: number; name: string; latitude: number; longitude: number }) => {
+	// Center on favorite
 	const zoom = Math.max(mapRef.value.getZoom(), CLOSE_ZOOM_LEVEL);
 	mapRef.value.flyToLocation(favorite.latitude, favorite.longitude, zoom);
+	pushMapLocation([favorite.longitude, favorite.latitude], zoom);
 
 	// Open pixel info
 	const tileCoords = lngLatToTileCoords([favorite.longitude, favorite.latitude]);
 	selectedPixelCoords.value = tileCoords;
-
-	// TODO: Make shared function for this
-	const url = new URL(globalThis.location.href);
-	url.searchParams.set("lat", favorite.latitude.toFixed(6));
-	url.searchParams.set("lng", favorite.longitude.toFixed(6));
-	url.searchParams.set("zoom", zoom.toFixed(2));
-	globalThis.history.pushState({}, "", url);
 };
 
 const zoomIn = () => mapRef.value?.zoomIn();
