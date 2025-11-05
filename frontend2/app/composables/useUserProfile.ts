@@ -38,37 +38,32 @@ export const useUserProfile = () => {
 	const baseURL = config.public.backendUrl;
 
 	const fetchUserProfile = async (): Promise<UserProfile | null> => {
-		const response = await fetch(`${baseURL}/me`, {
-			credentials: "include",
-			headers: {
-				"Content-Type": "application/json"
+		try {
+			return await $fetch(`${baseURL}/me`, {
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json"
+				}
+			});
+		} catch (error: unknown) {
+			const httpError = error as { statusCode?: number };
+			if (httpError.statusCode === 401) {
+				// Logged out
+				return null;
 			}
-		});
 
-		if (response.status === 401) {
-			// Logged out
-			return null;
+			throw error;
 		}
-
-		if (!response.ok) {
-			throw new Error(`Failed to fetch user profile: ${response.statusText}`);
-		}
-
-		return response.json();
 	};
 
 	const logout = async (): Promise<void> => {
-		const response = await fetch(`${baseURL}/logout`, {
+		return await $fetch(`${baseURL}/logout`, {
 			method: "POST",
 			credentials: "include",
 			headers: {
 				"Content-Type": "application/json"
 			}
 		});
-
-		if (!response.ok) {
-			throw new Error(`Failed to logout: ${response.statusText}`);
-		}
 	};
 
 	const login = () => location.href = `${baseURL}/login`;

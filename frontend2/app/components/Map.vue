@@ -562,7 +562,7 @@ onMounted(async () => {
 	map.dragRotate.disable();
 
 	map.on("load", () => {
-		setUpMapLayers(map!, savedLocation?.zoom ?? CLOSE_ZOOM_LEVEL);
+		setUpMapLayers(map!, props.initialLocation?.zoom ?? CLOSE_ZOOM_LEVEL);
 		updateFavoriteMarkers();
 	});
 

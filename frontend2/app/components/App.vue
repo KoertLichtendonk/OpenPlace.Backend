@@ -155,7 +155,7 @@
 
 		<PixelInfo
 			:is-open="selectedPixelCoords !== null"
-			:coords="selectedPixelCoords!"
+			:coords="selectedPixelCoords"
 			@close="selectedPixelCoords = null"
 			@report="handleReportPixel"
 			@favorite-added="handleFavoriteChanged"
@@ -167,7 +167,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import Toast, { type ToastMessageOptions } from "primevue/toast";
-import { useToast } from "primevue/usetoast";
 import Map, { type LocationWithZoom } from "~/components/Map.vue";
 import PaintButton from "~/components/PaintButton.vue";
 import ColorPalette from "~/components/ColorPalette.vue";
@@ -178,6 +177,7 @@ import { CLOSE_ZOOM_LEVEL, getPixelId, type LngLat, lngLatToTileCoords, type Til
 import { type UserProfile, useUserProfile } from "~/composables/useUserProfile";
 import { useCharges } from "~/composables/useCharges";
 import { usePaint } from "~/composables/usePaint";
+import { useErrorToast } from "~/composables/useErrorToast";
 
 interface Pixel {
 	id: string;
@@ -207,14 +207,6 @@ const randomTargetCoords = ref<{ lat: number; lng: number; zoom: number } | null
 
 let lastUserProfileFetch = Date.now();
 
-const toast = useToast();
-
-const notEnoughChargesToast: ToastMessageOptions = {
-	severity: "warn",
-	summary: "Not enough charges",
-	life: 3000
-};
-
 const {
 	currentCharges,
 	maxCharges,
@@ -227,17 +219,9 @@ const {
 
 const { fetchUserProfile, logout, login } = useUserProfile();
 const { submitPixels } = usePaint();
+const { showToast, handleError } = useErrorToast();
 
 const isLoggedIn = computed(() => userProfile.value !== null);
-
-const handleError = (error: unknown) => {
-	const summary = error instanceof Error ? error.message : String(error);
-	toast.add({
-		severity: "error",
-		summary,
-		life: 5000
-	});
-};
 
 const savedLocation = computed((): LocationWithZoom => {
 	let location: { lng: number; lat: number; zoom: number; } | null = null;
@@ -386,7 +370,14 @@ const pushMapLocation = (center?: LngLat, zoom?: number) => {
 		return;
 	}
 
-	const [lng, lat] = center ?? mapRef.value.getCenter();
+	let lng = 0;
+	let lat = 0;
+	if (center) {
+		[lng, lat] = center;
+	} else {
+		const mapCenter = mapRef.value.getCenter();
+		[lng, lat] = [mapCenter.lng, mapCenter.lat];
+	}
 	const zoomValue = zoom ?? mapRef.value.getZoom();
 
 	const url = new URL(location.href);
@@ -469,8 +460,10 @@ const drawPixelAtCoords = (tileCoords: TileCoords) => {
 		}
 
 		if (currentCharges.value <= 0) {
-			toast.remove(notEnoughChargesToast);
-			toast.add(notEnoughChargesToast);
+			showToast({
+				severity: "warn",
+				summary: "Not enough charges"
+			});
 			return;
 		}
 
@@ -517,10 +510,8 @@ const handleMapClick = (event: LngLat) => {
 		}
 
 		if (mapRef.value?.getZoom() < ZOOM_LEVEL) {
-			toast.add({
-				severity: "info",
-				summary: "Zoom in to view pixels",
-				life: 3000
+			showToast({
+				summary: "Zoom in to view pixels"
 			});
 			return;
 		}
@@ -602,7 +593,9 @@ const handleLogout = async () => {
 };
 
 const handleReportPixel = () => {
-	// TODO
+	showToast({
+		summary: "Reporting is not yet available. Please use the old frontend to report."
+	});
 };
 
 const handleFavoriteChanged = async () => {
@@ -647,14 +640,13 @@ const goToRandom = async () => {
 
 	try {
 		const config = useRuntimeConfig();
-		const response = await fetch(`${config.public.backendUrl}/s0/tile/random`, {
+		const data = await $fetch<{
+			pixel: { x: number; y: number };
+			tile: { x: number; y: number };
+		}>(`${config.public.backendUrl}/s0/tile/random`, {
 			credentials: "include"
 		});
 
-		const data = await response.json() as {
-			pixel: { x: number; y: number };
-			tile: { x: number; y: number };
-		};
 		const tileCoords: TileCoords = {
 			tile: [data.tile.x, data.tile.y],
 			pixel: [data.pixel.x, data.pixel.y]

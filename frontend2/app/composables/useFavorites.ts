@@ -8,25 +8,23 @@ export interface FavoriteLocation {
 export const useFavorites = () => {
 	const config = useRuntimeConfig();
 
-	const addFavorite = async (latitude: number, longitude: number): Promise<{ id: number; success: boolean }> => {
-		const response = await fetch(`${config.public.backendUrl}/favorite-location`, {
+	const addFavorite = async (coords: LngLat): Promise<{ id: number; success: boolean }> => {
+		const [lng, lat] = coords;
+		return await $fetch(`${config.public.backendUrl}/favorite-location`, {
 			method: "POST",
 			credentials: "include",
 			headers: {
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify({ latitude, longitude })
+			body: JSON.stringify({
+				latitude: lat,
+				longitude: lng
+			})
 		});
-
-		if (!response.ok) {
-			throw new Error(await response.json());
-		}
-
-		return response.json();
 	};
 
 	const removeFavorite = async (id: number): Promise<{ success: boolean }> => {
-		const response = await fetch(`${config.public.backendUrl}/favorite-location/delete`, {
+		return await $fetch(`${config.public.backendUrl}/favorite-location/delete`, {
 			method: "POST",
 			credentials: "include",
 			headers: {
@@ -34,12 +32,6 @@ export const useFavorites = () => {
 			},
 			body: JSON.stringify({ id })
 		});
-
-		if (!response.ok) {
-			throw new Error(await response.json());
-		}
-
-		return response.json();
 	};
 
 	return {
