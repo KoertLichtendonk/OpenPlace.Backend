@@ -59,7 +59,7 @@ cp .env.example .env
 
 ## Крок 5: Налаштування бази даних
 
-Виконайте наступны Prisma команди:
+Виконайте наступні Prisma команди:
 ```bash
 npm run db:generate
 npm run setup
