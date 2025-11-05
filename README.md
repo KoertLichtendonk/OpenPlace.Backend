@@ -55,9 +55,9 @@ If you’re unsure what your ISO code is, you can check it [here](https://gist.g
 Copy the English files from the `translations` folder and the main `README.md` into the folder you just created.
 You should now have four files: `README.md` and three installation markdown (`.md`) files.
 
-### Add your country flag at the top of every README
+### Add your country flag at the top of the English and your new translation's README
 
-At the top of **every** README (in all languages), add a new line that displays the flag of the language you are translating into.
+At the top of **both** README, add a new line that displays the flag of the language you are translating into.
 You need to add a flag that links to your translated files. Use the following as a template:
 
 ```html
