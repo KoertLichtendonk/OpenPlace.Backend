@@ -18,7 +18,9 @@
 							<span class="user-id">#{{ user.id }}</span>
 							<span
 								v-if="user.verified"
-								v-tooltip.top="'This player has been verified by an administrator of this instance.'">
+								v-tooltip.top="'This player has been verified by an administrator of this instance.'"
+								class="user-verified"
+							>
 								<Icon name="verified" />
 							</span>
 							<span
@@ -54,8 +56,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import Menu from "primevue/menu";
-import Avatar from "primevue/avatar";
-import Badge from "primevue/badge";
 import { COUNTRIES } from "../../../src/utils/country";
 
 const props = defineProps<{
@@ -116,17 +116,6 @@ defineExpose({
 	gap: 0.75rem;
 }
 
-.avatar-container {
-	position: relative;
-}
-
-.level-badge {
-	position: absolute;
-	bottom: -5px;
-	right: -5px;
-	background-color: #a855f7;
-}
-
 .user-details {
 	display: flex;
 	flex-direction: column;
@@ -175,8 +164,13 @@ defineExpose({
 	background-color: var(--p-menuitem-hover-background);
 }
 
+.user-verified {
+	line-height: 0;
+}
+
 .country-flag {
 	font-size: 1.25rem;
-	margin-top: -0.25rem;
+	margin-top: -0.1em;
+	line-height: 0;
 }
 </style>
