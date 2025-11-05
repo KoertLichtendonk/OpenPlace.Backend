@@ -12,6 +12,7 @@
 						rounded
 						size="small"
 						severity="secondary"
+						class="pixel-info--close-button"
 						aria-label="Close"
 						@click="$emit('close')"
 					>
@@ -259,7 +260,7 @@ watch(() => props.coords, () => {
 <style scoped>
 .pixel-info-container {
 	position: fixed;
-	bottom: 1rem;
+	bottom: 0.75rem;
 	left: 50%;
 	transform: translateX(-50%);
 	z-index: 1000;
@@ -267,22 +268,23 @@ watch(() => props.coords, () => {
 	width: calc(100vw - 2rem);
 }
 
-.pixel-info-card {
-	box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-}
-
 .pixel-info-header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 1rem;
+	padding: 0.75rem var(--p-card-body-padding) 0 var(--p-card-body-padding);
 	border-bottom: 1px solid var(--p-surface-border);
 }
 
 .pixel-info-header h3 {
 	margin: 0;
-	font-size: 1.25rem;
-	font-weight: 600;
+	font-size: 1.1rem;
+	font-weight: 500;
+}
+
+.pixel-info--close-button {
+	margin-inline-end: calc(var(--p-button-sm-padding-x) * -1);
+	aspect-ratio: 1;
 }
 
 .pixel-info-loading {
@@ -295,6 +297,7 @@ watch(() => props.coords, () => {
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
+	margin-top: -0.25rem;
 }
 
 .pixel-info-section {
@@ -305,8 +308,9 @@ watch(() => props.coords, () => {
 
 .pixel-info-section h4 {
 	margin: 0;
-	font-size: 1rem;
-	font-weight: 600;
+	margin-block-end: 0.1rem;
+	font-size: 0.95rem;
+	font-weight: 500;
 	color: var(--p-text-color);
 }
 

@@ -8,9 +8,9 @@
 				<div class="palette-header">
 					<Icon name="paint" class="palette-header-icon" />
 
-					<div id="palette-label" class="palette-header-label">
+					<h3 id="palette-label" class="palette-header-label">
 						Paint {{ pixelCount.toLocaleString() }} {{ pixelCount === 1 ? "pixel" : "pixels" }}
-					</div>
+					</h3>
 
 					<div class="palette-buttons">
 						<Button
@@ -120,6 +120,9 @@ defineEmits<{
 }
 
 .palette-header-label {
+	font-size: 1.1rem;
+	font-weight: 500;
+	margin-block: 0;
 	margin-inline-start: 0.25rem;
 	margin-inline-end: auto;
 	font-feature-settings: "tnum";
