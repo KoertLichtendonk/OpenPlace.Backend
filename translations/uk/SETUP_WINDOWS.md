@@ -1,4 +1,4 @@
-# OpenPlace — Гайд з налаштування Windows
+# openplace — Гайд з налаштування Windows
 
 Цей гайд допоможе вам підготувати ваш девайс з **Windows** до запуску **openplace**.
 
