@@ -381,10 +381,21 @@ const pushMapLocation = (center?: LngLat, zoom?: number) => {
 	const zoomValue = zoom ?? mapRef.value.getZoom();
 
 	const url = new URL(location.href);
-	url.searchParams.set("lat", lat.toFixed(6));
-	url.searchParams.set("lng", lng.toFixed(6));
-	url.searchParams.set("zoom", zoomValue.toFixed(2));
-	history.pushState({}, "", url);
+	const newParams = new URLSearchParams([
+		["lat", lat.toFixed(6)],
+		["lng", lng.toFixed(6)],
+		["zoom", zoomValue.toFixed(2)]
+	]);
+
+	const anyChanged = [...newParams.entries()]
+		.some(([key, value]) => url.searchParams.get(key) !== value);
+	if (anyChanged) {
+		for (const [key, value] of newParams.entries()) {
+			url.searchParams.set(key, value);
+		}
+
+		history.pushState({}, "", url);
+	}
 };
 
 const popMapLocation = () => {
