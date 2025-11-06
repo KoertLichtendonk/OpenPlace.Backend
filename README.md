@@ -1,4 +1,4 @@
-# ![openplace](frontend/img/og-image.png "openplace banner")
+# ![openplace](banner.png "openplace banner")
 
 <p align="center"><strong>Translations</strong> v5.2</p>
 <p align="center">
