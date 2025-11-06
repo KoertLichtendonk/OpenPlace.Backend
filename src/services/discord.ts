@@ -97,6 +97,7 @@ export default class DiscordService {
 		await prisma.user.update({
 			where: { id: userId },
 			data: {
+				name: discordUser.username,
 				discordUserId: discordUser.id,
 				discord: discordUser.username
 			}
